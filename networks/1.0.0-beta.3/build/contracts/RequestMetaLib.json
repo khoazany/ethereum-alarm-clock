@@ -1,0 +1,388 @@
+{
+  "contractName": "RequestMetaLib",
+  "abi": [],
+  "bytecode": "0x604c602c600b82828239805160001a60731460008114601c57601e565bfe5b5030600052607381538281f30073000000000000000000000000000000000000000030146080604052600080fd00a165627a7a72305820dd33d21c845848214e10be54b48e0726dcef6ba671ef8245726cb6e78f7e3c400029",
+  "deployedBytecode": "0x73000000000000000000000000000000000000000030146080604052600080fd00a165627a7a72305820dd33d21c845848214e10be54b48e0726dcef6ba671ef8245726cb6e78f7e3c400029",
+  "sourceMap": "134:516:24:-;;132:2:-1;166:7;155:9;146:7;137:37;252:7;246:14;243:1;238:23;232:4;229:33;270:1;265:20;;;;222:63;;265:20;274:9;222:63;;298:9;295:1;288:20;328:4;319:7;311:22;352:7;343;336:24",
+  "deployedSourceMap": "134:516:24:-;;;;;;;;",
+  "source": "pragma solidity ^0.4.21;\n\n/**\n * @title RequestMetaLib\n * @dev Small library holding all the metadata about a TransactionRequest.\n */\nlibrary RequestMetaLib {\n\n    struct RequestMeta {\n        address owner;              /// The address that created this request.\n\n        address createdBy;          /// The address of the RequestFactory which created this request.\n\n        bool isCancelled;           /// Was the TransactionRequest cancelled?\n        \n        bool wasCalled;             /// Was the TransactionRequest called?\n\n        bool wasSuccessful;         /// Was the return value from the TransactionRequest execution successful?\n    }\n\n}\n",
+  "sourcePath": "contracts/Library/RequestMetaLib.sol",
+  "ast": {
+    "absolutePath": "contracts/Library/RequestMetaLib.sol",
+    "exportedSymbols": {
+      "RequestMetaLib": [
+        5724
+      ]
+    },
+    "id": 5725,
+    "nodeType": "SourceUnit",
+    "nodes": [
+      {
+        "id": 5712,
+        "literals": [
+          "solidity",
+          "^",
+          "0.4",
+          ".21"
+        ],
+        "nodeType": "PragmaDirective",
+        "src": "0:24:24"
+      },
+      {
+        "baseContracts": [],
+        "contractDependencies": [],
+        "contractKind": "library",
+        "documentation": "@title RequestMetaLib\n@dev Small library holding all the metadata about a TransactionRequest.",
+        "fullyImplemented": true,
+        "id": 5724,
+        "linearizedBaseContracts": [
+          5724
+        ],
+        "name": "RequestMetaLib",
+        "nodeType": "ContractDefinition",
+        "nodes": [
+          {
+            "canonicalName": "RequestMetaLib.RequestMeta",
+            "id": 5723,
+            "members": [
+              {
+                "constant": false,
+                "id": 5714,
+                "name": "owner",
+                "nodeType": "VariableDeclaration",
+                "scope": 5723,
+                "src": "193:13:24",
+                "stateVariable": false,
+                "storageLocation": "default",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_address",
+                  "typeString": "address"
+                },
+                "typeName": {
+                  "id": 5713,
+                  "name": "address",
+                  "nodeType": "ElementaryTypeName",
+                  "src": "193:7:24",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  }
+                },
+                "value": null,
+                "visibility": "internal"
+              },
+              {
+                "constant": false,
+                "id": 5716,
+                "name": "createdBy",
+                "nodeType": "VariableDeclaration",
+                "scope": 5723,
+                "src": "273:17:24",
+                "stateVariable": false,
+                "storageLocation": "default",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_address",
+                  "typeString": "address"
+                },
+                "typeName": {
+                  "id": 5715,
+                  "name": "address",
+                  "nodeType": "ElementaryTypeName",
+                  "src": "273:7:24",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  }
+                },
+                "value": null,
+                "visibility": "internal"
+              },
+              {
+                "constant": false,
+                "id": 5718,
+                "name": "isCancelled",
+                "nodeType": "VariableDeclaration",
+                "scope": 5723,
+                "src": "376:16:24",
+                "stateVariable": false,
+                "storageLocation": "default",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_bool",
+                  "typeString": "bool"
+                },
+                "typeName": {
+                  "id": 5717,
+                  "name": "bool",
+                  "nodeType": "ElementaryTypeName",
+                  "src": "376:4:24",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_bool",
+                    "typeString": "bool"
+                  }
+                },
+                "value": null,
+                "visibility": "internal"
+              },
+              {
+                "constant": false,
+                "id": 5720,
+                "name": "wasCalled",
+                "nodeType": "VariableDeclaration",
+                "scope": 5723,
+                "src": "463:14:24",
+                "stateVariable": false,
+                "storageLocation": "default",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_bool",
+                  "typeString": "bool"
+                },
+                "typeName": {
+                  "id": 5719,
+                  "name": "bool",
+                  "nodeType": "ElementaryTypeName",
+                  "src": "463:4:24",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_bool",
+                    "typeString": "bool"
+                  }
+                },
+                "value": null,
+                "visibility": "internal"
+              },
+              {
+                "constant": false,
+                "id": 5722,
+                "name": "wasSuccessful",
+                "nodeType": "VariableDeclaration",
+                "scope": 5723,
+                "src": "539:18:24",
+                "stateVariable": false,
+                "storageLocation": "default",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_bool",
+                  "typeString": "bool"
+                },
+                "typeName": {
+                  "id": 5721,
+                  "name": "bool",
+                  "nodeType": "ElementaryTypeName",
+                  "src": "539:4:24",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_bool",
+                    "typeString": "bool"
+                  }
+                },
+                "value": null,
+                "visibility": "internal"
+              }
+            ],
+            "name": "RequestMeta",
+            "nodeType": "StructDefinition",
+            "scope": 5724,
+            "src": "164:483:24",
+            "visibility": "public"
+          }
+        ],
+        "scope": 5725,
+        "src": "134:516:24"
+      }
+    ],
+    "src": "0:651:24"
+  },
+  "legacyAST": {
+    "absolutePath": "contracts/Library/RequestMetaLib.sol",
+    "exportedSymbols": {
+      "RequestMetaLib": [
+        5724
+      ]
+    },
+    "id": 5725,
+    "nodeType": "SourceUnit",
+    "nodes": [
+      {
+        "id": 5712,
+        "literals": [
+          "solidity",
+          "^",
+          "0.4",
+          ".21"
+        ],
+        "nodeType": "PragmaDirective",
+        "src": "0:24:24"
+      },
+      {
+        "baseContracts": [],
+        "contractDependencies": [],
+        "contractKind": "library",
+        "documentation": "@title RequestMetaLib\n@dev Small library holding all the metadata about a TransactionRequest.",
+        "fullyImplemented": true,
+        "id": 5724,
+        "linearizedBaseContracts": [
+          5724
+        ],
+        "name": "RequestMetaLib",
+        "nodeType": "ContractDefinition",
+        "nodes": [
+          {
+            "canonicalName": "RequestMetaLib.RequestMeta",
+            "id": 5723,
+            "members": [
+              {
+                "constant": false,
+                "id": 5714,
+                "name": "owner",
+                "nodeType": "VariableDeclaration",
+                "scope": 5723,
+                "src": "193:13:24",
+                "stateVariable": false,
+                "storageLocation": "default",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_address",
+                  "typeString": "address"
+                },
+                "typeName": {
+                  "id": 5713,
+                  "name": "address",
+                  "nodeType": "ElementaryTypeName",
+                  "src": "193:7:24",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  }
+                },
+                "value": null,
+                "visibility": "internal"
+              },
+              {
+                "constant": false,
+                "id": 5716,
+                "name": "createdBy",
+                "nodeType": "VariableDeclaration",
+                "scope": 5723,
+                "src": "273:17:24",
+                "stateVariable": false,
+                "storageLocation": "default",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_address",
+                  "typeString": "address"
+                },
+                "typeName": {
+                  "id": 5715,
+                  "name": "address",
+                  "nodeType": "ElementaryTypeName",
+                  "src": "273:7:24",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  }
+                },
+                "value": null,
+                "visibility": "internal"
+              },
+              {
+                "constant": false,
+                "id": 5718,
+                "name": "isCancelled",
+                "nodeType": "VariableDeclaration",
+                "scope": 5723,
+                "src": "376:16:24",
+                "stateVariable": false,
+                "storageLocation": "default",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_bool",
+                  "typeString": "bool"
+                },
+                "typeName": {
+                  "id": 5717,
+                  "name": "bool",
+                  "nodeType": "ElementaryTypeName",
+                  "src": "376:4:24",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_bool",
+                    "typeString": "bool"
+                  }
+                },
+                "value": null,
+                "visibility": "internal"
+              },
+              {
+                "constant": false,
+                "id": 5720,
+                "name": "wasCalled",
+                "nodeType": "VariableDeclaration",
+                "scope": 5723,
+                "src": "463:14:24",
+                "stateVariable": false,
+                "storageLocation": "default",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_bool",
+                  "typeString": "bool"
+                },
+                "typeName": {
+                  "id": 5719,
+                  "name": "bool",
+                  "nodeType": "ElementaryTypeName",
+                  "src": "463:4:24",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_bool",
+                    "typeString": "bool"
+                  }
+                },
+                "value": null,
+                "visibility": "internal"
+              },
+              {
+                "constant": false,
+                "id": 5722,
+                "name": "wasSuccessful",
+                "nodeType": "VariableDeclaration",
+                "scope": 5723,
+                "src": "539:18:24",
+                "stateVariable": false,
+                "storageLocation": "default",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_bool",
+                  "typeString": "bool"
+                },
+                "typeName": {
+                  "id": 5721,
+                  "name": "bool",
+                  "nodeType": "ElementaryTypeName",
+                  "src": "539:4:24",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_bool",
+                    "typeString": "bool"
+                  }
+                },
+                "value": null,
+                "visibility": "internal"
+              }
+            ],
+            "name": "RequestMeta",
+            "nodeType": "StructDefinition",
+            "scope": 5724,
+            "src": "164:483:24",
+            "visibility": "public"
+          }
+        ],
+        "scope": 5725,
+        "src": "134:516:24"
+      }
+    ],
+    "src": "0:651:24"
+  },
+  "compiler": {
+    "name": "solc",
+    "version": "0.4.23+commit.124ca40d.Emscripten.clang"
+  },
+  "networks": {
+    "42": {
+      "events": {},
+      "links": {},
+      "address": "0x3fef9e4c267b6d1d508ee547fca9e474787ef68e",
+      "transactionHash": "0x6cf7bff1bd1b77a034fedd30f625f25fcfe99b7ede7a5dba8e9a293b5a78bdc3"
+    }
+  },
+  "schemaVersion": "2.0.0",
+  "updatedAt": "2018-04-24T07:01:29.910Z"
+}

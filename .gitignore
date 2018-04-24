@@ -3,6 +3,7 @@
 .password
 .genesis.json
 .vscode
+.DS_Store
 
 dist/
 chains/

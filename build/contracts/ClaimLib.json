@@ -1,0 +1,2298 @@
+{
+  "contractName": "ClaimLib",
+  "abi": [],
+  "bytecode": "0x604c602c600b82828239805160001a60731460008114601c57601e565bfe5b5030600052607381538281f30073000000000000000000000000000000000000000030146080604052600080fd00a165627a7a723058205ca61184bb5b381841692beee0fef8637c8caf85b8623ff1dbb0dda4ade6ff460029",
+  "deployedBytecode": "0x73000000000000000000000000000000000000000030146080604052600080fd00a165627a7a723058205ca61184bb5b381841692beee0fef8637c8caf85b8623ff1dbb0dda4ade6ff460029",
+  "sourceMap": "69:1764:19:-;;132:2:-1;166:7;155:9;146:7;137:37;252:7;246:14;243:1;238:23;232:4;229:33;270:1;265:20;;;;222:63;;265:20;274:9;222:63;;298:9;295:1;288:20;328:4;319:7;311:22;352:7;343;336:24",
+  "deployedSourceMap": "69:1764:19:-;;;;;;;;",
+  "source": "pragma solidity ^0.4.21;\n\nimport \"contracts/zeppelin/SafeMath.sol\";\n\nlibrary ClaimLib {\n    using SafeMath for uint;\n\n    struct ClaimData {\n        address claimedBy;          // The address that has claimed the txRequest.\n        uint claimDeposit;          // The deposit amount that was put down by the claimer.\n        uint requiredDeposit;       // The required deposit to claim the txRequest.\n        uint8 paymentModifier;      // An integer constrained between 0-100 that will be applied to the\n                                    // request payment as a percentage.\n    }\n\n    /*\n     * @dev Mark the request as being claimed.\n     * @param self The ClaimData that is being accessed.\n     * @param paymentModifier The payment modifier.\n     */\n    function claim(\n        ClaimData storage self, \n        uint8 _paymentModifier\n    ) \n        internal returns (bool)\n    {\n        self.claimedBy = msg.sender;\n        self.claimDeposit = msg.value;\n        self.paymentModifier = _paymentModifier;\n    }\n\n    /*\n     * Helper: returns whether this request is claimed.\n     */\n    function isClaimed(ClaimData storage self) \n        internal view returns (bool)\n    {\n        return self.claimedBy != 0x0;\n    }\n\n\n    /*\n     * @dev Refund the claim deposit to claimer.\n     * @param self The Request.ClaimData\n     * Called in RequestLib's `cancel()` and `refundClaimDeposit()`\n     */\n    function refundDeposit(ClaimData storage self) \n        internal returns (bool)\n    {\n        // Check that the claim deposit is non-zero.\n        if (self.claimDeposit > 0) {\n            uint depositAmount;\n            depositAmount = self.claimDeposit;\n            self.claimDeposit = 0;\n            /* solium-disable security/no-send */\n            return self.claimedBy.send(depositAmount);\n        }\n        return true;\n    }\n}",
+  "sourcePath": "contracts/Library/ClaimLib.sol",
+  "ast": {
+    "absolutePath": "contracts/Library/ClaimLib.sol",
+    "exportedSymbols": {
+      "ClaimLib": [
+        3851
+      ]
+    },
+    "id": 3852,
+    "nodeType": "SourceUnit",
+    "nodes": [
+      {
+        "id": 3758,
+        "literals": [
+          "solidity",
+          "^",
+          "0.4",
+          ".21"
+        ],
+        "nodeType": "PragmaDirective",
+        "src": "0:24:19"
+      },
+      {
+        "absolutePath": "contracts/zeppelin/SafeMath.sol",
+        "file": "contracts/zeppelin/SafeMath.sol",
+        "id": 3759,
+        "nodeType": "ImportDirective",
+        "scope": 3852,
+        "sourceUnit": 6390,
+        "src": "26:41:19",
+        "symbolAliases": [],
+        "unitAlias": ""
+      },
+      {
+        "baseContracts": [],
+        "contractDependencies": [],
+        "contractKind": "library",
+        "documentation": null,
+        "fullyImplemented": true,
+        "id": 3851,
+        "linearizedBaseContracts": [
+          3851
+        ],
+        "name": "ClaimLib",
+        "nodeType": "ContractDefinition",
+        "nodes": [
+          {
+            "id": 3762,
+            "libraryName": {
+              "contractScope": null,
+              "id": 3760,
+              "name": "SafeMath",
+              "nodeType": "UserDefinedTypeName",
+              "referencedDeclaration": 6389,
+              "src": "98:8:19",
+              "typeDescriptions": {
+                "typeIdentifier": "t_contract$_SafeMath_$6389",
+                "typeString": "library SafeMath"
+              }
+            },
+            "nodeType": "UsingForDirective",
+            "src": "92:24:19",
+            "typeName": {
+              "id": 3761,
+              "name": "uint",
+              "nodeType": "ElementaryTypeName",
+              "src": "111:4:19",
+              "typeDescriptions": {
+                "typeIdentifier": "t_uint256",
+                "typeString": "uint256"
+              }
+            }
+          },
+          {
+            "canonicalName": "ClaimLib.ClaimData",
+            "id": 3771,
+            "members": [
+              {
+                "constant": false,
+                "id": 3764,
+                "name": "claimedBy",
+                "nodeType": "VariableDeclaration",
+                "scope": 3771,
+                "src": "149:17:19",
+                "stateVariable": false,
+                "storageLocation": "default",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_address",
+                  "typeString": "address"
+                },
+                "typeName": {
+                  "id": 3763,
+                  "name": "address",
+                  "nodeType": "ElementaryTypeName",
+                  "src": "149:7:19",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  }
+                },
+                "value": null,
+                "visibility": "internal"
+              },
+              {
+                "constant": false,
+                "id": 3766,
+                "name": "claimDeposit",
+                "nodeType": "VariableDeclaration",
+                "scope": 3771,
+                "src": "232:17:19",
+                "stateVariable": false,
+                "storageLocation": "default",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_uint256",
+                  "typeString": "uint256"
+                },
+                "typeName": {
+                  "id": 3765,
+                  "name": "uint",
+                  "nodeType": "ElementaryTypeName",
+                  "src": "232:4:19",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  }
+                },
+                "value": null,
+                "visibility": "internal"
+              },
+              {
+                "constant": false,
+                "id": 3768,
+                "name": "requiredDeposit",
+                "nodeType": "VariableDeclaration",
+                "scope": 3771,
+                "src": "324:20:19",
+                "stateVariable": false,
+                "storageLocation": "default",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_uint256",
+                  "typeString": "uint256"
+                },
+                "typeName": {
+                  "id": 3767,
+                  "name": "uint",
+                  "nodeType": "ElementaryTypeName",
+                  "src": "324:4:19",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  }
+                },
+                "value": null,
+                "visibility": "internal"
+              },
+              {
+                "constant": false,
+                "id": 3770,
+                "name": "paymentModifier",
+                "nodeType": "VariableDeclaration",
+                "scope": 3771,
+                "src": "408:21:19",
+                "stateVariable": false,
+                "storageLocation": "default",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_uint8",
+                  "typeString": "uint8"
+                },
+                "typeName": {
+                  "id": 3769,
+                  "name": "uint8",
+                  "nodeType": "ElementaryTypeName",
+                  "src": "408:5:19",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint8",
+                    "typeString": "uint8"
+                  }
+                },
+                "value": null,
+                "visibility": "internal"
+              }
+            ],
+            "name": "ClaimData",
+            "nodeType": "StructDefinition",
+            "scope": 3851,
+            "src": "122:459:19",
+            "visibility": "public"
+          },
+          {
+            "body": {
+              "id": 3800,
+              "nodeType": "Block",
+              "src": "881:132:19",
+              "statements": [
+                {
+                  "expression": {
+                    "argumentTypes": null,
+                    "id": 3785,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": false,
+                    "lValueRequested": false,
+                    "leftHandSide": {
+                      "argumentTypes": null,
+                      "expression": {
+                        "argumentTypes": null,
+                        "id": 3780,
+                        "name": "self",
+                        "nodeType": "Identifier",
+                        "overloadedDeclarations": [],
+                        "referencedDeclaration": 3773,
+                        "src": "891:4:19",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_struct$_ClaimData_$3771_storage_ptr",
+                          "typeString": "struct ClaimLib.ClaimData storage pointer"
+                        }
+                      },
+                      "id": 3782,
+                      "isConstant": false,
+                      "isLValue": true,
+                      "isPure": false,
+                      "lValueRequested": true,
+                      "memberName": "claimedBy",
+                      "nodeType": "MemberAccess",
+                      "referencedDeclaration": 3764,
+                      "src": "891:14:19",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_address",
+                        "typeString": "address"
+                      }
+                    },
+                    "nodeType": "Assignment",
+                    "operator": "=",
+                    "rightHandSide": {
+                      "argumentTypes": null,
+                      "expression": {
+                        "argumentTypes": null,
+                        "id": 3783,
+                        "name": "msg",
+                        "nodeType": "Identifier",
+                        "overloadedDeclarations": [],
+                        "referencedDeclaration": 6404,
+                        "src": "908:3:19",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_magic_message",
+                          "typeString": "msg"
+                        }
+                      },
+                      "id": 3784,
+                      "isConstant": false,
+                      "isLValue": false,
+                      "isPure": false,
+                      "lValueRequested": false,
+                      "memberName": "sender",
+                      "nodeType": "MemberAccess",
+                      "referencedDeclaration": null,
+                      "src": "908:10:19",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_address",
+                        "typeString": "address"
+                      }
+                    },
+                    "src": "891:27:19",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "id": 3786,
+                  "nodeType": "ExpressionStatement",
+                  "src": "891:27:19"
+                },
+                {
+                  "expression": {
+                    "argumentTypes": null,
+                    "id": 3792,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": false,
+                    "lValueRequested": false,
+                    "leftHandSide": {
+                      "argumentTypes": null,
+                      "expression": {
+                        "argumentTypes": null,
+                        "id": 3787,
+                        "name": "self",
+                        "nodeType": "Identifier",
+                        "overloadedDeclarations": [],
+                        "referencedDeclaration": 3773,
+                        "src": "928:4:19",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_struct$_ClaimData_$3771_storage_ptr",
+                          "typeString": "struct ClaimLib.ClaimData storage pointer"
+                        }
+                      },
+                      "id": 3789,
+                      "isConstant": false,
+                      "isLValue": true,
+                      "isPure": false,
+                      "lValueRequested": true,
+                      "memberName": "claimDeposit",
+                      "nodeType": "MemberAccess",
+                      "referencedDeclaration": 3766,
+                      "src": "928:17:19",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_uint256",
+                        "typeString": "uint256"
+                      }
+                    },
+                    "nodeType": "Assignment",
+                    "operator": "=",
+                    "rightHandSide": {
+                      "argumentTypes": null,
+                      "expression": {
+                        "argumentTypes": null,
+                        "id": 3790,
+                        "name": "msg",
+                        "nodeType": "Identifier",
+                        "overloadedDeclarations": [],
+                        "referencedDeclaration": 6404,
+                        "src": "948:3:19",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_magic_message",
+                          "typeString": "msg"
+                        }
+                      },
+                      "id": 3791,
+                      "isConstant": false,
+                      "isLValue": false,
+                      "isPure": false,
+                      "lValueRequested": false,
+                      "memberName": "value",
+                      "nodeType": "MemberAccess",
+                      "referencedDeclaration": null,
+                      "src": "948:9:19",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_uint256",
+                        "typeString": "uint256"
+                      }
+                    },
+                    "src": "928:29:19",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "id": 3793,
+                  "nodeType": "ExpressionStatement",
+                  "src": "928:29:19"
+                },
+                {
+                  "expression": {
+                    "argumentTypes": null,
+                    "id": 3798,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": false,
+                    "lValueRequested": false,
+                    "leftHandSide": {
+                      "argumentTypes": null,
+                      "expression": {
+                        "argumentTypes": null,
+                        "id": 3794,
+                        "name": "self",
+                        "nodeType": "Identifier",
+                        "overloadedDeclarations": [],
+                        "referencedDeclaration": 3773,
+                        "src": "967:4:19",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_struct$_ClaimData_$3771_storage_ptr",
+                          "typeString": "struct ClaimLib.ClaimData storage pointer"
+                        }
+                      },
+                      "id": 3796,
+                      "isConstant": false,
+                      "isLValue": true,
+                      "isPure": false,
+                      "lValueRequested": true,
+                      "memberName": "paymentModifier",
+                      "nodeType": "MemberAccess",
+                      "referencedDeclaration": 3770,
+                      "src": "967:20:19",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_uint8",
+                        "typeString": "uint8"
+                      }
+                    },
+                    "nodeType": "Assignment",
+                    "operator": "=",
+                    "rightHandSide": {
+                      "argumentTypes": null,
+                      "id": 3797,
+                      "name": "_paymentModifier",
+                      "nodeType": "Identifier",
+                      "overloadedDeclarations": [],
+                      "referencedDeclaration": 3775,
+                      "src": "990:16:19",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_uint8",
+                        "typeString": "uint8"
+                      }
+                    },
+                    "src": "967:39:19",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint8",
+                      "typeString": "uint8"
+                    }
+                  },
+                  "id": 3799,
+                  "nodeType": "ExpressionStatement",
+                  "src": "967:39:19"
+                }
+              ]
+            },
+            "documentation": null,
+            "id": 3801,
+            "implemented": true,
+            "isConstructor": false,
+            "isDeclaredConst": false,
+            "modifiers": [],
+            "name": "claim",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 3776,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 3773,
+                  "name": "self",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 3801,
+                  "src": "782:22:19",
+                  "stateVariable": false,
+                  "storageLocation": "storage",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_struct$_ClaimData_$3771_storage_ptr",
+                    "typeString": "struct ClaimLib.ClaimData"
+                  },
+                  "typeName": {
+                    "contractScope": null,
+                    "id": 3772,
+                    "name": "ClaimData",
+                    "nodeType": "UserDefinedTypeName",
+                    "referencedDeclaration": 3771,
+                    "src": "782:9:19",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_struct$_ClaimData_$3771_storage_ptr",
+                      "typeString": "struct ClaimLib.ClaimData"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 3775,
+                  "name": "_paymentModifier",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 3801,
+                  "src": "815:22:19",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint8",
+                    "typeString": "uint8"
+                  },
+                  "typeName": {
+                    "id": 3774,
+                    "name": "uint8",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "815:5:19",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint8",
+                      "typeString": "uint8"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "772:71:19"
+            },
+            "payable": false,
+            "returnParameters": {
+              "id": 3779,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 3778,
+                  "name": "",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 3801,
+                  "src": "871:4:19",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_bool",
+                    "typeString": "bool"
+                  },
+                  "typeName": {
+                    "id": 3777,
+                    "name": "bool",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "871:4:19",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bool",
+                      "typeString": "bool"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "870:6:19"
+            },
+            "scope": 3851,
+            "src": "758:255:19",
+            "stateMutability": "nonpayable",
+            "superFunction": null,
+            "visibility": "internal"
+          },
+          {
+            "body": {
+              "id": 3813,
+              "nodeType": "Block",
+              "src": "1175:45:19",
+              "statements": [
+                {
+                  "expression": {
+                    "argumentTypes": null,
+                    "commonType": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    },
+                    "id": 3811,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": false,
+                    "lValueRequested": false,
+                    "leftExpression": {
+                      "argumentTypes": null,
+                      "expression": {
+                        "argumentTypes": null,
+                        "id": 3808,
+                        "name": "self",
+                        "nodeType": "Identifier",
+                        "overloadedDeclarations": [],
+                        "referencedDeclaration": 3803,
+                        "src": "1192:4:19",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_struct$_ClaimData_$3771_storage_ptr",
+                          "typeString": "struct ClaimLib.ClaimData storage pointer"
+                        }
+                      },
+                      "id": 3809,
+                      "isConstant": false,
+                      "isLValue": true,
+                      "isPure": false,
+                      "lValueRequested": false,
+                      "memberName": "claimedBy",
+                      "nodeType": "MemberAccess",
+                      "referencedDeclaration": 3764,
+                      "src": "1192:14:19",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_address",
+                        "typeString": "address"
+                      }
+                    },
+                    "nodeType": "BinaryOperation",
+                    "operator": "!=",
+                    "rightExpression": {
+                      "argumentTypes": null,
+                      "hexValue": "307830",
+                      "id": 3810,
+                      "isConstant": false,
+                      "isLValue": false,
+                      "isPure": true,
+                      "kind": "number",
+                      "lValueRequested": false,
+                      "nodeType": "Literal",
+                      "src": "1210:3:19",
+                      "subdenomination": null,
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_rational_0_by_1",
+                        "typeString": "int_const 0"
+                      },
+                      "value": "0x0"
+                    },
+                    "src": "1192:21:19",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bool",
+                      "typeString": "bool"
+                    }
+                  },
+                  "functionReturnParameters": 3807,
+                  "id": 3812,
+                  "nodeType": "Return",
+                  "src": "1185:28:19"
+                }
+              ]
+            },
+            "documentation": null,
+            "id": 3814,
+            "implemented": true,
+            "isConstructor": false,
+            "isDeclaredConst": true,
+            "modifiers": [],
+            "name": "isClaimed",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 3804,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 3803,
+                  "name": "self",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 3814,
+                  "src": "1109:22:19",
+                  "stateVariable": false,
+                  "storageLocation": "storage",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_struct$_ClaimData_$3771_storage_ptr",
+                    "typeString": "struct ClaimLib.ClaimData"
+                  },
+                  "typeName": {
+                    "contractScope": null,
+                    "id": 3802,
+                    "name": "ClaimData",
+                    "nodeType": "UserDefinedTypeName",
+                    "referencedDeclaration": 3771,
+                    "src": "1109:9:19",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_struct$_ClaimData_$3771_storage_ptr",
+                      "typeString": "struct ClaimLib.ClaimData"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "1108:24:19"
+            },
+            "payable": false,
+            "returnParameters": {
+              "id": 3807,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 3806,
+                  "name": "",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 3814,
+                  "src": "1165:4:19",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_bool",
+                    "typeString": "bool"
+                  },
+                  "typeName": {
+                    "id": 3805,
+                    "name": "bool",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "1165:4:19",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bool",
+                      "typeString": "bool"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "1164:6:19"
+            },
+            "scope": 3851,
+            "src": "1090:130:19",
+            "stateMutability": "view",
+            "superFunction": null,
+            "visibility": "internal"
+          },
+          {
+            "body": {
+              "id": 3849,
+              "nodeType": "Block",
+              "src": "1484:347:19",
+              "statements": [
+                {
+                  "condition": {
+                    "argumentTypes": null,
+                    "commonType": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    },
+                    "id": 3824,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": false,
+                    "lValueRequested": false,
+                    "leftExpression": {
+                      "argumentTypes": null,
+                      "expression": {
+                        "argumentTypes": null,
+                        "id": 3821,
+                        "name": "self",
+                        "nodeType": "Identifier",
+                        "overloadedDeclarations": [],
+                        "referencedDeclaration": 3816,
+                        "src": "1551:4:19",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_struct$_ClaimData_$3771_storage_ptr",
+                          "typeString": "struct ClaimLib.ClaimData storage pointer"
+                        }
+                      },
+                      "id": 3822,
+                      "isConstant": false,
+                      "isLValue": true,
+                      "isPure": false,
+                      "lValueRequested": false,
+                      "memberName": "claimDeposit",
+                      "nodeType": "MemberAccess",
+                      "referencedDeclaration": 3766,
+                      "src": "1551:17:19",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_uint256",
+                        "typeString": "uint256"
+                      }
+                    },
+                    "nodeType": "BinaryOperation",
+                    "operator": ">",
+                    "rightExpression": {
+                      "argumentTypes": null,
+                      "hexValue": "30",
+                      "id": 3823,
+                      "isConstant": false,
+                      "isLValue": false,
+                      "isPure": true,
+                      "kind": "number",
+                      "lValueRequested": false,
+                      "nodeType": "Literal",
+                      "src": "1571:1:19",
+                      "subdenomination": null,
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_rational_0_by_1",
+                        "typeString": "int_const 0"
+                      },
+                      "value": "0"
+                    },
+                    "src": "1551:21:19",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bool",
+                      "typeString": "bool"
+                    }
+                  },
+                  "falseBody": null,
+                  "id": 3846,
+                  "nodeType": "IfStatement",
+                  "src": "1547:257:19",
+                  "trueBody": {
+                    "id": 3845,
+                    "nodeType": "Block",
+                    "src": "1574:230:19",
+                    "statements": [
+                      {
+                        "assignments": [],
+                        "declarations": [
+                          {
+                            "constant": false,
+                            "id": 3826,
+                            "name": "depositAmount",
+                            "nodeType": "VariableDeclaration",
+                            "scope": 3850,
+                            "src": "1588:18:19",
+                            "stateVariable": false,
+                            "storageLocation": "default",
+                            "typeDescriptions": {
+                              "typeIdentifier": "t_uint256",
+                              "typeString": "uint256"
+                            },
+                            "typeName": {
+                              "id": 3825,
+                              "name": "uint",
+                              "nodeType": "ElementaryTypeName",
+                              "src": "1588:4:19",
+                              "typeDescriptions": {
+                                "typeIdentifier": "t_uint256",
+                                "typeString": "uint256"
+                              }
+                            },
+                            "value": null,
+                            "visibility": "internal"
+                          }
+                        ],
+                        "id": 3827,
+                        "initialValue": null,
+                        "nodeType": "VariableDeclarationStatement",
+                        "src": "1588:18:19"
+                      },
+                      {
+                        "expression": {
+                          "argumentTypes": null,
+                          "id": 3831,
+                          "isConstant": false,
+                          "isLValue": false,
+                          "isPure": false,
+                          "lValueRequested": false,
+                          "leftHandSide": {
+                            "argumentTypes": null,
+                            "id": 3828,
+                            "name": "depositAmount",
+                            "nodeType": "Identifier",
+                            "overloadedDeclarations": [],
+                            "referencedDeclaration": 3826,
+                            "src": "1620:13:19",
+                            "typeDescriptions": {
+                              "typeIdentifier": "t_uint256",
+                              "typeString": "uint256"
+                            }
+                          },
+                          "nodeType": "Assignment",
+                          "operator": "=",
+                          "rightHandSide": {
+                            "argumentTypes": null,
+                            "expression": {
+                              "argumentTypes": null,
+                              "id": 3829,
+                              "name": "self",
+                              "nodeType": "Identifier",
+                              "overloadedDeclarations": [],
+                              "referencedDeclaration": 3816,
+                              "src": "1636:4:19",
+                              "typeDescriptions": {
+                                "typeIdentifier": "t_struct$_ClaimData_$3771_storage_ptr",
+                                "typeString": "struct ClaimLib.ClaimData storage pointer"
+                              }
+                            },
+                            "id": 3830,
+                            "isConstant": false,
+                            "isLValue": true,
+                            "isPure": false,
+                            "lValueRequested": false,
+                            "memberName": "claimDeposit",
+                            "nodeType": "MemberAccess",
+                            "referencedDeclaration": 3766,
+                            "src": "1636:17:19",
+                            "typeDescriptions": {
+                              "typeIdentifier": "t_uint256",
+                              "typeString": "uint256"
+                            }
+                          },
+                          "src": "1620:33:19",
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_uint256",
+                            "typeString": "uint256"
+                          }
+                        },
+                        "id": 3832,
+                        "nodeType": "ExpressionStatement",
+                        "src": "1620:33:19"
+                      },
+                      {
+                        "expression": {
+                          "argumentTypes": null,
+                          "id": 3837,
+                          "isConstant": false,
+                          "isLValue": false,
+                          "isPure": false,
+                          "lValueRequested": false,
+                          "leftHandSide": {
+                            "argumentTypes": null,
+                            "expression": {
+                              "argumentTypes": null,
+                              "id": 3833,
+                              "name": "self",
+                              "nodeType": "Identifier",
+                              "overloadedDeclarations": [],
+                              "referencedDeclaration": 3816,
+                              "src": "1667:4:19",
+                              "typeDescriptions": {
+                                "typeIdentifier": "t_struct$_ClaimData_$3771_storage_ptr",
+                                "typeString": "struct ClaimLib.ClaimData storage pointer"
+                              }
+                            },
+                            "id": 3835,
+                            "isConstant": false,
+                            "isLValue": true,
+                            "isPure": false,
+                            "lValueRequested": true,
+                            "memberName": "claimDeposit",
+                            "nodeType": "MemberAccess",
+                            "referencedDeclaration": 3766,
+                            "src": "1667:17:19",
+                            "typeDescriptions": {
+                              "typeIdentifier": "t_uint256",
+                              "typeString": "uint256"
+                            }
+                          },
+                          "nodeType": "Assignment",
+                          "operator": "=",
+                          "rightHandSide": {
+                            "argumentTypes": null,
+                            "hexValue": "30",
+                            "id": 3836,
+                            "isConstant": false,
+                            "isLValue": false,
+                            "isPure": true,
+                            "kind": "number",
+                            "lValueRequested": false,
+                            "nodeType": "Literal",
+                            "src": "1687:1:19",
+                            "subdenomination": null,
+                            "typeDescriptions": {
+                              "typeIdentifier": "t_rational_0_by_1",
+                              "typeString": "int_const 0"
+                            },
+                            "value": "0"
+                          },
+                          "src": "1667:21:19",
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_uint256",
+                            "typeString": "uint256"
+                          }
+                        },
+                        "id": 3838,
+                        "nodeType": "ExpressionStatement",
+                        "src": "1667:21:19"
+                      },
+                      {
+                        "expression": {
+                          "argumentTypes": null,
+                          "arguments": [
+                            {
+                              "argumentTypes": null,
+                              "id": 3842,
+                              "name": "depositAmount",
+                              "nodeType": "Identifier",
+                              "overloadedDeclarations": [],
+                              "referencedDeclaration": 3826,
+                              "src": "1779:13:19",
+                              "typeDescriptions": {
+                                "typeIdentifier": "t_uint256",
+                                "typeString": "uint256"
+                              }
+                            }
+                          ],
+                          "expression": {
+                            "argumentTypes": [
+                              {
+                                "typeIdentifier": "t_uint256",
+                                "typeString": "uint256"
+                              }
+                            ],
+                            "expression": {
+                              "argumentTypes": null,
+                              "expression": {
+                                "argumentTypes": null,
+                                "id": 3839,
+                                "name": "self",
+                                "nodeType": "Identifier",
+                                "overloadedDeclarations": [],
+                                "referencedDeclaration": 3816,
+                                "src": "1759:4:19",
+                                "typeDescriptions": {
+                                  "typeIdentifier": "t_struct$_ClaimData_$3771_storage_ptr",
+                                  "typeString": "struct ClaimLib.ClaimData storage pointer"
+                                }
+                              },
+                              "id": 3840,
+                              "isConstant": false,
+                              "isLValue": true,
+                              "isPure": false,
+                              "lValueRequested": false,
+                              "memberName": "claimedBy",
+                              "nodeType": "MemberAccess",
+                              "referencedDeclaration": 3764,
+                              "src": "1759:14:19",
+                              "typeDescriptions": {
+                                "typeIdentifier": "t_address",
+                                "typeString": "address"
+                              }
+                            },
+                            "id": 3841,
+                            "isConstant": false,
+                            "isLValue": false,
+                            "isPure": false,
+                            "lValueRequested": false,
+                            "memberName": "send",
+                            "nodeType": "MemberAccess",
+                            "referencedDeclaration": null,
+                            "src": "1759:19:19",
+                            "typeDescriptions": {
+                              "typeIdentifier": "t_function_send_nonpayable$_t_uint256_$returns$_t_bool_$",
+                              "typeString": "function (uint256) returns (bool)"
+                            }
+                          },
+                          "id": 3843,
+                          "isConstant": false,
+                          "isLValue": false,
+                          "isPure": false,
+                          "kind": "functionCall",
+                          "lValueRequested": false,
+                          "names": [],
+                          "nodeType": "FunctionCall",
+                          "src": "1759:34:19",
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_bool",
+                            "typeString": "bool"
+                          }
+                        },
+                        "functionReturnParameters": 3820,
+                        "id": 3844,
+                        "nodeType": "Return",
+                        "src": "1752:41:19"
+                      }
+                    ]
+                  }
+                },
+                {
+                  "expression": {
+                    "argumentTypes": null,
+                    "hexValue": "74727565",
+                    "id": 3847,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": true,
+                    "kind": "bool",
+                    "lValueRequested": false,
+                    "nodeType": "Literal",
+                    "src": "1820:4:19",
+                    "subdenomination": null,
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bool",
+                      "typeString": "bool"
+                    },
+                    "value": "true"
+                  },
+                  "functionReturnParameters": 3820,
+                  "id": 3848,
+                  "nodeType": "Return",
+                  "src": "1813:11:19"
+                }
+              ]
+            },
+            "documentation": null,
+            "id": 3850,
+            "implemented": true,
+            "isConstructor": false,
+            "isDeclaredConst": false,
+            "modifiers": [],
+            "name": "refundDeposit",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 3817,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 3816,
+                  "name": "self",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 3850,
+                  "src": "1423:22:19",
+                  "stateVariable": false,
+                  "storageLocation": "storage",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_struct$_ClaimData_$3771_storage_ptr",
+                    "typeString": "struct ClaimLib.ClaimData"
+                  },
+                  "typeName": {
+                    "contractScope": null,
+                    "id": 3815,
+                    "name": "ClaimData",
+                    "nodeType": "UserDefinedTypeName",
+                    "referencedDeclaration": 3771,
+                    "src": "1423:9:19",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_struct$_ClaimData_$3771_storage_ptr",
+                      "typeString": "struct ClaimLib.ClaimData"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "1422:24:19"
+            },
+            "payable": false,
+            "returnParameters": {
+              "id": 3820,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 3819,
+                  "name": "",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 3850,
+                  "src": "1474:4:19",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_bool",
+                    "typeString": "bool"
+                  },
+                  "typeName": {
+                    "id": 3818,
+                    "name": "bool",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "1474:4:19",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bool",
+                      "typeString": "bool"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "1473:6:19"
+            },
+            "scope": 3851,
+            "src": "1400:431:19",
+            "stateMutability": "nonpayable",
+            "superFunction": null,
+            "visibility": "internal"
+          }
+        ],
+        "scope": 3852,
+        "src": "69:1764:19"
+      }
+    ],
+    "src": "0:1833:19"
+  },
+  "legacyAST": {
+    "absolutePath": "contracts/Library/ClaimLib.sol",
+    "exportedSymbols": {
+      "ClaimLib": [
+        3851
+      ]
+    },
+    "id": 3852,
+    "nodeType": "SourceUnit",
+    "nodes": [
+      {
+        "id": 3758,
+        "literals": [
+          "solidity",
+          "^",
+          "0.4",
+          ".21"
+        ],
+        "nodeType": "PragmaDirective",
+        "src": "0:24:19"
+      },
+      {
+        "absolutePath": "contracts/zeppelin/SafeMath.sol",
+        "file": "contracts/zeppelin/SafeMath.sol",
+        "id": 3759,
+        "nodeType": "ImportDirective",
+        "scope": 3852,
+        "sourceUnit": 6390,
+        "src": "26:41:19",
+        "symbolAliases": [],
+        "unitAlias": ""
+      },
+      {
+        "baseContracts": [],
+        "contractDependencies": [],
+        "contractKind": "library",
+        "documentation": null,
+        "fullyImplemented": true,
+        "id": 3851,
+        "linearizedBaseContracts": [
+          3851
+        ],
+        "name": "ClaimLib",
+        "nodeType": "ContractDefinition",
+        "nodes": [
+          {
+            "id": 3762,
+            "libraryName": {
+              "contractScope": null,
+              "id": 3760,
+              "name": "SafeMath",
+              "nodeType": "UserDefinedTypeName",
+              "referencedDeclaration": 6389,
+              "src": "98:8:19",
+              "typeDescriptions": {
+                "typeIdentifier": "t_contract$_SafeMath_$6389",
+                "typeString": "library SafeMath"
+              }
+            },
+            "nodeType": "UsingForDirective",
+            "src": "92:24:19",
+            "typeName": {
+              "id": 3761,
+              "name": "uint",
+              "nodeType": "ElementaryTypeName",
+              "src": "111:4:19",
+              "typeDescriptions": {
+                "typeIdentifier": "t_uint256",
+                "typeString": "uint256"
+              }
+            }
+          },
+          {
+            "canonicalName": "ClaimLib.ClaimData",
+            "id": 3771,
+            "members": [
+              {
+                "constant": false,
+                "id": 3764,
+                "name": "claimedBy",
+                "nodeType": "VariableDeclaration",
+                "scope": 3771,
+                "src": "149:17:19",
+                "stateVariable": false,
+                "storageLocation": "default",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_address",
+                  "typeString": "address"
+                },
+                "typeName": {
+                  "id": 3763,
+                  "name": "address",
+                  "nodeType": "ElementaryTypeName",
+                  "src": "149:7:19",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  }
+                },
+                "value": null,
+                "visibility": "internal"
+              },
+              {
+                "constant": false,
+                "id": 3766,
+                "name": "claimDeposit",
+                "nodeType": "VariableDeclaration",
+                "scope": 3771,
+                "src": "232:17:19",
+                "stateVariable": false,
+                "storageLocation": "default",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_uint256",
+                  "typeString": "uint256"
+                },
+                "typeName": {
+                  "id": 3765,
+                  "name": "uint",
+                  "nodeType": "ElementaryTypeName",
+                  "src": "232:4:19",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  }
+                },
+                "value": null,
+                "visibility": "internal"
+              },
+              {
+                "constant": false,
+                "id": 3768,
+                "name": "requiredDeposit",
+                "nodeType": "VariableDeclaration",
+                "scope": 3771,
+                "src": "324:20:19",
+                "stateVariable": false,
+                "storageLocation": "default",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_uint256",
+                  "typeString": "uint256"
+                },
+                "typeName": {
+                  "id": 3767,
+                  "name": "uint",
+                  "nodeType": "ElementaryTypeName",
+                  "src": "324:4:19",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  }
+                },
+                "value": null,
+                "visibility": "internal"
+              },
+              {
+                "constant": false,
+                "id": 3770,
+                "name": "paymentModifier",
+                "nodeType": "VariableDeclaration",
+                "scope": 3771,
+                "src": "408:21:19",
+                "stateVariable": false,
+                "storageLocation": "default",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_uint8",
+                  "typeString": "uint8"
+                },
+                "typeName": {
+                  "id": 3769,
+                  "name": "uint8",
+                  "nodeType": "ElementaryTypeName",
+                  "src": "408:5:19",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint8",
+                    "typeString": "uint8"
+                  }
+                },
+                "value": null,
+                "visibility": "internal"
+              }
+            ],
+            "name": "ClaimData",
+            "nodeType": "StructDefinition",
+            "scope": 3851,
+            "src": "122:459:19",
+            "visibility": "public"
+          },
+          {
+            "body": {
+              "id": 3800,
+              "nodeType": "Block",
+              "src": "881:132:19",
+              "statements": [
+                {
+                  "expression": {
+                    "argumentTypes": null,
+                    "id": 3785,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": false,
+                    "lValueRequested": false,
+                    "leftHandSide": {
+                      "argumentTypes": null,
+                      "expression": {
+                        "argumentTypes": null,
+                        "id": 3780,
+                        "name": "self",
+                        "nodeType": "Identifier",
+                        "overloadedDeclarations": [],
+                        "referencedDeclaration": 3773,
+                        "src": "891:4:19",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_struct$_ClaimData_$3771_storage_ptr",
+                          "typeString": "struct ClaimLib.ClaimData storage pointer"
+                        }
+                      },
+                      "id": 3782,
+                      "isConstant": false,
+                      "isLValue": true,
+                      "isPure": false,
+                      "lValueRequested": true,
+                      "memberName": "claimedBy",
+                      "nodeType": "MemberAccess",
+                      "referencedDeclaration": 3764,
+                      "src": "891:14:19",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_address",
+                        "typeString": "address"
+                      }
+                    },
+                    "nodeType": "Assignment",
+                    "operator": "=",
+                    "rightHandSide": {
+                      "argumentTypes": null,
+                      "expression": {
+                        "argumentTypes": null,
+                        "id": 3783,
+                        "name": "msg",
+                        "nodeType": "Identifier",
+                        "overloadedDeclarations": [],
+                        "referencedDeclaration": 6404,
+                        "src": "908:3:19",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_magic_message",
+                          "typeString": "msg"
+                        }
+                      },
+                      "id": 3784,
+                      "isConstant": false,
+                      "isLValue": false,
+                      "isPure": false,
+                      "lValueRequested": false,
+                      "memberName": "sender",
+                      "nodeType": "MemberAccess",
+                      "referencedDeclaration": null,
+                      "src": "908:10:19",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_address",
+                        "typeString": "address"
+                      }
+                    },
+                    "src": "891:27:19",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "id": 3786,
+                  "nodeType": "ExpressionStatement",
+                  "src": "891:27:19"
+                },
+                {
+                  "expression": {
+                    "argumentTypes": null,
+                    "id": 3792,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": false,
+                    "lValueRequested": false,
+                    "leftHandSide": {
+                      "argumentTypes": null,
+                      "expression": {
+                        "argumentTypes": null,
+                        "id": 3787,
+                        "name": "self",
+                        "nodeType": "Identifier",
+                        "overloadedDeclarations": [],
+                        "referencedDeclaration": 3773,
+                        "src": "928:4:19",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_struct$_ClaimData_$3771_storage_ptr",
+                          "typeString": "struct ClaimLib.ClaimData storage pointer"
+                        }
+                      },
+                      "id": 3789,
+                      "isConstant": false,
+                      "isLValue": true,
+                      "isPure": false,
+                      "lValueRequested": true,
+                      "memberName": "claimDeposit",
+                      "nodeType": "MemberAccess",
+                      "referencedDeclaration": 3766,
+                      "src": "928:17:19",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_uint256",
+                        "typeString": "uint256"
+                      }
+                    },
+                    "nodeType": "Assignment",
+                    "operator": "=",
+                    "rightHandSide": {
+                      "argumentTypes": null,
+                      "expression": {
+                        "argumentTypes": null,
+                        "id": 3790,
+                        "name": "msg",
+                        "nodeType": "Identifier",
+                        "overloadedDeclarations": [],
+                        "referencedDeclaration": 6404,
+                        "src": "948:3:19",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_magic_message",
+                          "typeString": "msg"
+                        }
+                      },
+                      "id": 3791,
+                      "isConstant": false,
+                      "isLValue": false,
+                      "isPure": false,
+                      "lValueRequested": false,
+                      "memberName": "value",
+                      "nodeType": "MemberAccess",
+                      "referencedDeclaration": null,
+                      "src": "948:9:19",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_uint256",
+                        "typeString": "uint256"
+                      }
+                    },
+                    "src": "928:29:19",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "id": 3793,
+                  "nodeType": "ExpressionStatement",
+                  "src": "928:29:19"
+                },
+                {
+                  "expression": {
+                    "argumentTypes": null,
+                    "id": 3798,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": false,
+                    "lValueRequested": false,
+                    "leftHandSide": {
+                      "argumentTypes": null,
+                      "expression": {
+                        "argumentTypes": null,
+                        "id": 3794,
+                        "name": "self",
+                        "nodeType": "Identifier",
+                        "overloadedDeclarations": [],
+                        "referencedDeclaration": 3773,
+                        "src": "967:4:19",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_struct$_ClaimData_$3771_storage_ptr",
+                          "typeString": "struct ClaimLib.ClaimData storage pointer"
+                        }
+                      },
+                      "id": 3796,
+                      "isConstant": false,
+                      "isLValue": true,
+                      "isPure": false,
+                      "lValueRequested": true,
+                      "memberName": "paymentModifier",
+                      "nodeType": "MemberAccess",
+                      "referencedDeclaration": 3770,
+                      "src": "967:20:19",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_uint8",
+                        "typeString": "uint8"
+                      }
+                    },
+                    "nodeType": "Assignment",
+                    "operator": "=",
+                    "rightHandSide": {
+                      "argumentTypes": null,
+                      "id": 3797,
+                      "name": "_paymentModifier",
+                      "nodeType": "Identifier",
+                      "overloadedDeclarations": [],
+                      "referencedDeclaration": 3775,
+                      "src": "990:16:19",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_uint8",
+                        "typeString": "uint8"
+                      }
+                    },
+                    "src": "967:39:19",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint8",
+                      "typeString": "uint8"
+                    }
+                  },
+                  "id": 3799,
+                  "nodeType": "ExpressionStatement",
+                  "src": "967:39:19"
+                }
+              ]
+            },
+            "documentation": null,
+            "id": 3801,
+            "implemented": true,
+            "isConstructor": false,
+            "isDeclaredConst": false,
+            "modifiers": [],
+            "name": "claim",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 3776,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 3773,
+                  "name": "self",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 3801,
+                  "src": "782:22:19",
+                  "stateVariable": false,
+                  "storageLocation": "storage",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_struct$_ClaimData_$3771_storage_ptr",
+                    "typeString": "struct ClaimLib.ClaimData"
+                  },
+                  "typeName": {
+                    "contractScope": null,
+                    "id": 3772,
+                    "name": "ClaimData",
+                    "nodeType": "UserDefinedTypeName",
+                    "referencedDeclaration": 3771,
+                    "src": "782:9:19",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_struct$_ClaimData_$3771_storage_ptr",
+                      "typeString": "struct ClaimLib.ClaimData"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 3775,
+                  "name": "_paymentModifier",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 3801,
+                  "src": "815:22:19",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint8",
+                    "typeString": "uint8"
+                  },
+                  "typeName": {
+                    "id": 3774,
+                    "name": "uint8",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "815:5:19",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint8",
+                      "typeString": "uint8"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "772:71:19"
+            },
+            "payable": false,
+            "returnParameters": {
+              "id": 3779,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 3778,
+                  "name": "",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 3801,
+                  "src": "871:4:19",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_bool",
+                    "typeString": "bool"
+                  },
+                  "typeName": {
+                    "id": 3777,
+                    "name": "bool",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "871:4:19",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bool",
+                      "typeString": "bool"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "870:6:19"
+            },
+            "scope": 3851,
+            "src": "758:255:19",
+            "stateMutability": "nonpayable",
+            "superFunction": null,
+            "visibility": "internal"
+          },
+          {
+            "body": {
+              "id": 3813,
+              "nodeType": "Block",
+              "src": "1175:45:19",
+              "statements": [
+                {
+                  "expression": {
+                    "argumentTypes": null,
+                    "commonType": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    },
+                    "id": 3811,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": false,
+                    "lValueRequested": false,
+                    "leftExpression": {
+                      "argumentTypes": null,
+                      "expression": {
+                        "argumentTypes": null,
+                        "id": 3808,
+                        "name": "self",
+                        "nodeType": "Identifier",
+                        "overloadedDeclarations": [],
+                        "referencedDeclaration": 3803,
+                        "src": "1192:4:19",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_struct$_ClaimData_$3771_storage_ptr",
+                          "typeString": "struct ClaimLib.ClaimData storage pointer"
+                        }
+                      },
+                      "id": 3809,
+                      "isConstant": false,
+                      "isLValue": true,
+                      "isPure": false,
+                      "lValueRequested": false,
+                      "memberName": "claimedBy",
+                      "nodeType": "MemberAccess",
+                      "referencedDeclaration": 3764,
+                      "src": "1192:14:19",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_address",
+                        "typeString": "address"
+                      }
+                    },
+                    "nodeType": "BinaryOperation",
+                    "operator": "!=",
+                    "rightExpression": {
+                      "argumentTypes": null,
+                      "hexValue": "307830",
+                      "id": 3810,
+                      "isConstant": false,
+                      "isLValue": false,
+                      "isPure": true,
+                      "kind": "number",
+                      "lValueRequested": false,
+                      "nodeType": "Literal",
+                      "src": "1210:3:19",
+                      "subdenomination": null,
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_rational_0_by_1",
+                        "typeString": "int_const 0"
+                      },
+                      "value": "0x0"
+                    },
+                    "src": "1192:21:19",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bool",
+                      "typeString": "bool"
+                    }
+                  },
+                  "functionReturnParameters": 3807,
+                  "id": 3812,
+                  "nodeType": "Return",
+                  "src": "1185:28:19"
+                }
+              ]
+            },
+            "documentation": null,
+            "id": 3814,
+            "implemented": true,
+            "isConstructor": false,
+            "isDeclaredConst": true,
+            "modifiers": [],
+            "name": "isClaimed",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 3804,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 3803,
+                  "name": "self",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 3814,
+                  "src": "1109:22:19",
+                  "stateVariable": false,
+                  "storageLocation": "storage",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_struct$_ClaimData_$3771_storage_ptr",
+                    "typeString": "struct ClaimLib.ClaimData"
+                  },
+                  "typeName": {
+                    "contractScope": null,
+                    "id": 3802,
+                    "name": "ClaimData",
+                    "nodeType": "UserDefinedTypeName",
+                    "referencedDeclaration": 3771,
+                    "src": "1109:9:19",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_struct$_ClaimData_$3771_storage_ptr",
+                      "typeString": "struct ClaimLib.ClaimData"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "1108:24:19"
+            },
+            "payable": false,
+            "returnParameters": {
+              "id": 3807,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 3806,
+                  "name": "",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 3814,
+                  "src": "1165:4:19",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_bool",
+                    "typeString": "bool"
+                  },
+                  "typeName": {
+                    "id": 3805,
+                    "name": "bool",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "1165:4:19",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bool",
+                      "typeString": "bool"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "1164:6:19"
+            },
+            "scope": 3851,
+            "src": "1090:130:19",
+            "stateMutability": "view",
+            "superFunction": null,
+            "visibility": "internal"
+          },
+          {
+            "body": {
+              "id": 3849,
+              "nodeType": "Block",
+              "src": "1484:347:19",
+              "statements": [
+                {
+                  "condition": {
+                    "argumentTypes": null,
+                    "commonType": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    },
+                    "id": 3824,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": false,
+                    "lValueRequested": false,
+                    "leftExpression": {
+                      "argumentTypes": null,
+                      "expression": {
+                        "argumentTypes": null,
+                        "id": 3821,
+                        "name": "self",
+                        "nodeType": "Identifier",
+                        "overloadedDeclarations": [],
+                        "referencedDeclaration": 3816,
+                        "src": "1551:4:19",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_struct$_ClaimData_$3771_storage_ptr",
+                          "typeString": "struct ClaimLib.ClaimData storage pointer"
+                        }
+                      },
+                      "id": 3822,
+                      "isConstant": false,
+                      "isLValue": true,
+                      "isPure": false,
+                      "lValueRequested": false,
+                      "memberName": "claimDeposit",
+                      "nodeType": "MemberAccess",
+                      "referencedDeclaration": 3766,
+                      "src": "1551:17:19",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_uint256",
+                        "typeString": "uint256"
+                      }
+                    },
+                    "nodeType": "BinaryOperation",
+                    "operator": ">",
+                    "rightExpression": {
+                      "argumentTypes": null,
+                      "hexValue": "30",
+                      "id": 3823,
+                      "isConstant": false,
+                      "isLValue": false,
+                      "isPure": true,
+                      "kind": "number",
+                      "lValueRequested": false,
+                      "nodeType": "Literal",
+                      "src": "1571:1:19",
+                      "subdenomination": null,
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_rational_0_by_1",
+                        "typeString": "int_const 0"
+                      },
+                      "value": "0"
+                    },
+                    "src": "1551:21:19",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bool",
+                      "typeString": "bool"
+                    }
+                  },
+                  "falseBody": null,
+                  "id": 3846,
+                  "nodeType": "IfStatement",
+                  "src": "1547:257:19",
+                  "trueBody": {
+                    "id": 3845,
+                    "nodeType": "Block",
+                    "src": "1574:230:19",
+                    "statements": [
+                      {
+                        "assignments": [],
+                        "declarations": [
+                          {
+                            "constant": false,
+                            "id": 3826,
+                            "name": "depositAmount",
+                            "nodeType": "VariableDeclaration",
+                            "scope": 3850,
+                            "src": "1588:18:19",
+                            "stateVariable": false,
+                            "storageLocation": "default",
+                            "typeDescriptions": {
+                              "typeIdentifier": "t_uint256",
+                              "typeString": "uint256"
+                            },
+                            "typeName": {
+                              "id": 3825,
+                              "name": "uint",
+                              "nodeType": "ElementaryTypeName",
+                              "src": "1588:4:19",
+                              "typeDescriptions": {
+                                "typeIdentifier": "t_uint256",
+                                "typeString": "uint256"
+                              }
+                            },
+                            "value": null,
+                            "visibility": "internal"
+                          }
+                        ],
+                        "id": 3827,
+                        "initialValue": null,
+                        "nodeType": "VariableDeclarationStatement",
+                        "src": "1588:18:19"
+                      },
+                      {
+                        "expression": {
+                          "argumentTypes": null,
+                          "id": 3831,
+                          "isConstant": false,
+                          "isLValue": false,
+                          "isPure": false,
+                          "lValueRequested": false,
+                          "leftHandSide": {
+                            "argumentTypes": null,
+                            "id": 3828,
+                            "name": "depositAmount",
+                            "nodeType": "Identifier",
+                            "overloadedDeclarations": [],
+                            "referencedDeclaration": 3826,
+                            "src": "1620:13:19",
+                            "typeDescriptions": {
+                              "typeIdentifier": "t_uint256",
+                              "typeString": "uint256"
+                            }
+                          },
+                          "nodeType": "Assignment",
+                          "operator": "=",
+                          "rightHandSide": {
+                            "argumentTypes": null,
+                            "expression": {
+                              "argumentTypes": null,
+                              "id": 3829,
+                              "name": "self",
+                              "nodeType": "Identifier",
+                              "overloadedDeclarations": [],
+                              "referencedDeclaration": 3816,
+                              "src": "1636:4:19",
+                              "typeDescriptions": {
+                                "typeIdentifier": "t_struct$_ClaimData_$3771_storage_ptr",
+                                "typeString": "struct ClaimLib.ClaimData storage pointer"
+                              }
+                            },
+                            "id": 3830,
+                            "isConstant": false,
+                            "isLValue": true,
+                            "isPure": false,
+                            "lValueRequested": false,
+                            "memberName": "claimDeposit",
+                            "nodeType": "MemberAccess",
+                            "referencedDeclaration": 3766,
+                            "src": "1636:17:19",
+                            "typeDescriptions": {
+                              "typeIdentifier": "t_uint256",
+                              "typeString": "uint256"
+                            }
+                          },
+                          "src": "1620:33:19",
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_uint256",
+                            "typeString": "uint256"
+                          }
+                        },
+                        "id": 3832,
+                        "nodeType": "ExpressionStatement",
+                        "src": "1620:33:19"
+                      },
+                      {
+                        "expression": {
+                          "argumentTypes": null,
+                          "id": 3837,
+                          "isConstant": false,
+                          "isLValue": false,
+                          "isPure": false,
+                          "lValueRequested": false,
+                          "leftHandSide": {
+                            "argumentTypes": null,
+                            "expression": {
+                              "argumentTypes": null,
+                              "id": 3833,
+                              "name": "self",
+                              "nodeType": "Identifier",
+                              "overloadedDeclarations": [],
+                              "referencedDeclaration": 3816,
+                              "src": "1667:4:19",
+                              "typeDescriptions": {
+                                "typeIdentifier": "t_struct$_ClaimData_$3771_storage_ptr",
+                                "typeString": "struct ClaimLib.ClaimData storage pointer"
+                              }
+                            },
+                            "id": 3835,
+                            "isConstant": false,
+                            "isLValue": true,
+                            "isPure": false,
+                            "lValueRequested": true,
+                            "memberName": "claimDeposit",
+                            "nodeType": "MemberAccess",
+                            "referencedDeclaration": 3766,
+                            "src": "1667:17:19",
+                            "typeDescriptions": {
+                              "typeIdentifier": "t_uint256",
+                              "typeString": "uint256"
+                            }
+                          },
+                          "nodeType": "Assignment",
+                          "operator": "=",
+                          "rightHandSide": {
+                            "argumentTypes": null,
+                            "hexValue": "30",
+                            "id": 3836,
+                            "isConstant": false,
+                            "isLValue": false,
+                            "isPure": true,
+                            "kind": "number",
+                            "lValueRequested": false,
+                            "nodeType": "Literal",
+                            "src": "1687:1:19",
+                            "subdenomination": null,
+                            "typeDescriptions": {
+                              "typeIdentifier": "t_rational_0_by_1",
+                              "typeString": "int_const 0"
+                            },
+                            "value": "0"
+                          },
+                          "src": "1667:21:19",
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_uint256",
+                            "typeString": "uint256"
+                          }
+                        },
+                        "id": 3838,
+                        "nodeType": "ExpressionStatement",
+                        "src": "1667:21:19"
+                      },
+                      {
+                        "expression": {
+                          "argumentTypes": null,
+                          "arguments": [
+                            {
+                              "argumentTypes": null,
+                              "id": 3842,
+                              "name": "depositAmount",
+                              "nodeType": "Identifier",
+                              "overloadedDeclarations": [],
+                              "referencedDeclaration": 3826,
+                              "src": "1779:13:19",
+                              "typeDescriptions": {
+                                "typeIdentifier": "t_uint256",
+                                "typeString": "uint256"
+                              }
+                            }
+                          ],
+                          "expression": {
+                            "argumentTypes": [
+                              {
+                                "typeIdentifier": "t_uint256",
+                                "typeString": "uint256"
+                              }
+                            ],
+                            "expression": {
+                              "argumentTypes": null,
+                              "expression": {
+                                "argumentTypes": null,
+                                "id": 3839,
+                                "name": "self",
+                                "nodeType": "Identifier",
+                                "overloadedDeclarations": [],
+                                "referencedDeclaration": 3816,
+                                "src": "1759:4:19",
+                                "typeDescriptions": {
+                                  "typeIdentifier": "t_struct$_ClaimData_$3771_storage_ptr",
+                                  "typeString": "struct ClaimLib.ClaimData storage pointer"
+                                }
+                              },
+                              "id": 3840,
+                              "isConstant": false,
+                              "isLValue": true,
+                              "isPure": false,
+                              "lValueRequested": false,
+                              "memberName": "claimedBy",
+                              "nodeType": "MemberAccess",
+                              "referencedDeclaration": 3764,
+                              "src": "1759:14:19",
+                              "typeDescriptions": {
+                                "typeIdentifier": "t_address",
+                                "typeString": "address"
+                              }
+                            },
+                            "id": 3841,
+                            "isConstant": false,
+                            "isLValue": false,
+                            "isPure": false,
+                            "lValueRequested": false,
+                            "memberName": "send",
+                            "nodeType": "MemberAccess",
+                            "referencedDeclaration": null,
+                            "src": "1759:19:19",
+                            "typeDescriptions": {
+                              "typeIdentifier": "t_function_send_nonpayable$_t_uint256_$returns$_t_bool_$",
+                              "typeString": "function (uint256) returns (bool)"
+                            }
+                          },
+                          "id": 3843,
+                          "isConstant": false,
+                          "isLValue": false,
+                          "isPure": false,
+                          "kind": "functionCall",
+                          "lValueRequested": false,
+                          "names": [],
+                          "nodeType": "FunctionCall",
+                          "src": "1759:34:19",
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_bool",
+                            "typeString": "bool"
+                          }
+                        },
+                        "functionReturnParameters": 3820,
+                        "id": 3844,
+                        "nodeType": "Return",
+                        "src": "1752:41:19"
+                      }
+                    ]
+                  }
+                },
+                {
+                  "expression": {
+                    "argumentTypes": null,
+                    "hexValue": "74727565",
+                    "id": 3847,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": true,
+                    "kind": "bool",
+                    "lValueRequested": false,
+                    "nodeType": "Literal",
+                    "src": "1820:4:19",
+                    "subdenomination": null,
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bool",
+                      "typeString": "bool"
+                    },
+                    "value": "true"
+                  },
+                  "functionReturnParameters": 3820,
+                  "id": 3848,
+                  "nodeType": "Return",
+                  "src": "1813:11:19"
+                }
+              ]
+            },
+            "documentation": null,
+            "id": 3850,
+            "implemented": true,
+            "isConstructor": false,
+            "isDeclaredConst": false,
+            "modifiers": [],
+            "name": "refundDeposit",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 3817,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 3816,
+                  "name": "self",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 3850,
+                  "src": "1423:22:19",
+                  "stateVariable": false,
+                  "storageLocation": "storage",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_struct$_ClaimData_$3771_storage_ptr",
+                    "typeString": "struct ClaimLib.ClaimData"
+                  },
+                  "typeName": {
+                    "contractScope": null,
+                    "id": 3815,
+                    "name": "ClaimData",
+                    "nodeType": "UserDefinedTypeName",
+                    "referencedDeclaration": 3771,
+                    "src": "1423:9:19",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_struct$_ClaimData_$3771_storage_ptr",
+                      "typeString": "struct ClaimLib.ClaimData"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "1422:24:19"
+            },
+            "payable": false,
+            "returnParameters": {
+              "id": 3820,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 3819,
+                  "name": "",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 3850,
+                  "src": "1474:4:19",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_bool",
+                    "typeString": "bool"
+                  },
+                  "typeName": {
+                    "id": 3818,
+                    "name": "bool",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "1474:4:19",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bool",
+                      "typeString": "bool"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "1473:6:19"
+            },
+            "scope": 3851,
+            "src": "1400:431:19",
+            "stateMutability": "nonpayable",
+            "superFunction": null,
+            "visibility": "internal"
+          }
+        ],
+        "scope": 3852,
+        "src": "69:1764:19"
+      }
+    ],
+    "src": "0:1833:19"
+  },
+  "compiler": {
+    "name": "solc",
+    "version": "0.4.23+commit.124ca40d.Emscripten.clang"
+  },
+  "networks": {
+    "42": {
+      "events": {},
+      "links": {},
+      "address": "0x7a764bb00fe101c53450a97519ad191e3c4830c5",
+      "transactionHash": "0x98db250209d19f42b028ee5b88b36e136cd6d9f02ddabdab1463209ce3438130"
+    }
+  },
+  "schemaVersion": "2.0.0",
+  "updatedAt": "2018-04-24T07:01:29.897Z"
+}
