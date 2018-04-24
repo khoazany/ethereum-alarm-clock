@@ -5,6 +5,7 @@ import "contracts/Library/ExecutionLib.sol";
 import "contracts/Library/PaymentLib.sol";
 import "contracts/Library/RequestMetaLib.sol";
 import "contracts/Library/RequestScheduleLib.sol";
+import "contracts/Interface/RequestFactoryInterface.sol";
 
 import "contracts/Library/MathLib.sol";
 import "contracts/zeppelin/SafeMath.sol";
@@ -85,19 +86,20 @@ library RequestLib {
      */
     function initialize(
         Request storage self,
-        address[4]      _addressArgs,
+        address[5]      _addressArgs,
         uint[12]        _uintArgs,
         bytes           _callData
     ) 
         public returns (bool)
     {
-        address[6] memory addressValues = [
+        address[7] memory addressValues = [
             0x0,                // self.claimData.claimedBy
             _addressArgs[0],    // self.meta.createdBy
             _addressArgs[1],    // self.meta.owner
             _addressArgs[2],    // self.paymentData.feeRecipient
             0x0,                // self.paymentData.bountyBenefactor
-            _addressArgs[3]     // self.txnData.toAddress
+            _addressArgs[3],    // self.txnData.toAddress
+            _addressArgs[4]     // self.meta.requestFactory
         ];
 
         bool[3] memory boolValues = [false, false, false];
@@ -130,15 +132,16 @@ library RequestLib {
     }
  
     function serialize(Request storage self)
-        internal view returns(address[6], bool[3], uint[15], uint8[1])
+        internal view returns(address[7], bool[3], uint[15], uint8[1])
     {
-        address[6] memory addressValues = [
+        address[7] memory addressValues = [
             self.claimData.claimedBy,
             self.meta.createdBy,
             self.meta.owner,
             self.paymentData.feeRecipient,
             self.paymentData.bountyBenefactor,
-            self.txnData.toAddress
+            self.txnData.toAddress,
+            self.meta.requestFactory
         ];
 
         bool[3] memory boolValues = [
@@ -179,7 +182,7 @@ library RequestLib {
      */
     function deserialize(
         Request storage self,
-        address[6]  _addressValues,
+        address[7]  _addressValues,
         bool[3]     _boolValues,
         uint[15]    _uintValues,
         uint8[1]    _uint8Values,
@@ -197,6 +200,7 @@ library RequestLib {
         self.paymentData.feeRecipient = _addressValues[3];
         self.paymentData.bountyBenefactor = _addressValues[4];
         self.txnData.toAddress = _addressValues[5];
+        self.meta.requestFactory = _addressValues[6];
 
         // Boolean values
         self.meta.isCancelled = _boolValues[0];
@@ -274,31 +278,33 @@ library RequestLib {
         // Record the gas at the beginning of the transaction so we can
         // calculate how much has been used later.
         uint startGas = gasleft();
+        address requestFactory = self.meta.requestFactory;
 
         // +----------------------+
         // | Begin: Authorization |
         // +----------------------+
 
         if (gasleft() < requiredExecutionGas(self).sub(PRE_EXECUTION_GAS)) {
-            emit Aborted(uint8(AbortReason.InsufficientGas));
+            emitAborted(requestFactory, AbortReason.InsufficientGas);
             return false;
         } else if (self.meta.wasCalled) {
-            emit Aborted(uint8(AbortReason.AlreadyCalled));
+            emitAborted(requestFactory, AbortReason.AlreadyCalled);
             return false;
         } else if (self.meta.isCancelled) {
-            emit Aborted(uint8(AbortReason.WasCancelled));
+            emitAborted(requestFactory, AbortReason.WasCancelled);
             return false;
         } else if (self.schedule.isBeforeWindow()) {
-            emit Aborted(uint8(AbortReason.BeforeCallWindow));
+            emitAborted(requestFactory, AbortReason.BeforeCallWindow);
             return false;
         } else if (self.schedule.isAfterWindow()) {
-            emit Aborted(uint8(AbortReason.AfterCallWindow));
+            emitAborted(requestFactory, AbortReason.AfterCallWindow);
             return false;
         } else if (self.claimData.isClaimed() && msg.sender != self.claimData.claimedBy && self.schedule.inReservedWindow()) {
             emit Aborted(uint8(AbortReason.ReservedForClaimer));
+            emitAborted(requestFactory, AbortReason.ReservedForClaimer);
             return false;
         } else if (self.txnData.gasPrice != tx.gasprice) {
-            emit Aborted(uint8(AbortReason.MismatchGasPrice));
+            emitAborted(requestFactory, AbortReason.MismatchGasPrice);
             return false;
         }
 
@@ -371,7 +377,7 @@ library RequestLib {
 
         // Log the bounty and fee. Otherwise it is non-trivial to figure
         // out how much was payed.
-        emit Executed(self.paymentData.bountyOwed, totalFeePayment, measuredGasConsumption);
+        emitExecuted(self.meta.requestFactory, self.paymentData.bountyOwed, totalFeePayment, measuredGasConsumption);
     
         // Attempt to send the bounty. as with `.sendFee()` it may fail and need to be caled after execution.
         self.paymentData.sendBounty();
@@ -386,6 +392,32 @@ library RequestLib {
         return true;
     }
 
+    function emitAborted(address requestFactory, AbortReason reason)
+        private
+    {
+        emit Aborted(uint8(reason));
+        if (requestFactory != 0x0) { //this makes the RF usage optional
+            RequestFactoryInterface(requestFactory).emitAborted();
+        }
+    }
+
+    function emitCancelled(address requestFactory, uint rewardPayment, uint measuredGasConsumption)
+        private
+    {
+        emit Cancelled(rewardPayment, measuredGasConsumption);
+        if (requestFactory != 0x0) { //this makes the RF usage optional
+            RequestFactoryInterface(requestFactory).emitCancelled();
+        }
+    }
+
+    function emitExecuted(address requestFactory, uint bountyOwed, uint totalFeePayment, uint measuredGasConsumption)
+        private
+    {
+        emit Executed(bountyOwed, totalFeePayment, measuredGasConsumption);
+        if (requestFactory != 0x0) { //this makes the RF usage optional
+            RequestFactoryInterface(requestFactory).emitExecuted();
+        }
+    }
 
     // This is the amount of gas that it takes to enter from the
     // `TransactionRequest.execute()` contract into the `RequestLib.execute()`
@@ -410,7 +442,7 @@ library RequestLib {
     uint public constant CANCEL_EXTRA_GAS = 85000; // Check accuracy
 
     function getEXECUTION_GAS_OVERHEAD()
-        public view returns (uint)
+        public pure returns (uint)
     {
         return EXECUTION_GAS_OVERHEAD;
     }
@@ -502,7 +534,7 @@ library RequestLib {
         }
 
         // Log it!
-        emit Cancelled(rewardPayment, measuredGasConsumption);
+        emitCancelled(self.meta.requestFactory, rewardPayment, measuredGasConsumption);
 
         // Send the remaining ether to the owner.
         return sendOwnerEther(self);

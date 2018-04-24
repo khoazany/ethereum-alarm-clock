@@ -65,7 +65,8 @@ contract RequestFactory is RequestFactoryInterface, CloneFactory {
                 msg.sender,       // Created by
                 _addressArgs[0],  // meta.owner
                 _addressArgs[1],  // paymentData.feeRecipient
-                _addressArgs[2]   // txnData.toAddress
+                _addressArgs[2],  // txnData.toAddress
+                address(this)     // meta.requestFactory
             ],
             _uintArgs,            //uint[12]
             _callData
@@ -151,6 +152,30 @@ contract RequestFactory is RequestFactoryInterface, CloneFactory {
 
     event ValidationError(uint8 error);
 
+    enum State {
+        Executed,
+        Cancelled,
+        Aborted
+    }
+
+    function emitExecuted()
+        public
+    {
+        emitStateChange(State.Executed);
+    }
+
+    function emitCancelled()
+        public
+    {
+        emitStateChange(State.Cancelled);
+    }
+
+    function emitAborted()
+        public
+    {
+        emitStateChange(State.Aborted);
+    }
+
     /*
      * @dev Validate the constructor arguments for either `createRequest` or `createValidatedRequest`.
      */
@@ -204,5 +229,13 @@ contract RequestFactory is RequestFactoryInterface, CloneFactory {
             revert();
         }
         return sign * int(windowStart - (windowStart % bucketSize));
+    }
+
+    function emitStateChange(State state)
+        private
+    {
+        require(isKnownRequest(msg.sender));
+
+        emit RequestStateChanged(msg.sender, uint8(state));
     }
 }

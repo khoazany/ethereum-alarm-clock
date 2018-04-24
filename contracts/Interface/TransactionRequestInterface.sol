@@ -11,7 +11,7 @@ contract TransactionRequestInterface {
     function proxy(address recipient, bytes callData) public payable returns (bool);
 
     // Data accessors
-    function requestData() public view returns (address[6], bool[3], uint[15], uint8[1]);
+    function requestData() public view returns (address[7], bool[3], uint[15], uint8[1]);
     function callData() public view returns (bytes);
 
     // Pull mechanisms for payments.

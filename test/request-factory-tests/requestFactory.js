@@ -78,6 +78,16 @@ contract("Request factory", async (accounts) => {
     return { paramsForValidation, isValid }
   }
 
+  const getInitParams = async () => {
+    const { paramsForValidation } = await validate()
+
+    const params = paramsForValidation
+    params.push(transactionRequest.gasPrice)
+    params.push(transactionRequest.requiredDeposit)
+
+    return params
+  }
+
   before(async () => {
     requestLib = await RequestLib.deployed()
     expect(requestLib.address).to.exist
@@ -129,6 +139,8 @@ contract("Request factory", async (accounts) => {
     expect(requestData.meta.owner).to.equal(accounts[0])
 
     expect(requestData.meta.createdBy).to.equal(accounts[0])
+
+    expect(requestData.meta.requestFactory).to.equal(requestFactory.address)
 
     expect(requestData.meta.isCancelled).to.be.false
 
@@ -235,11 +247,7 @@ contract("Request factory", async (accounts) => {
   })
 
   it("should not allow to reinitialize the scheduled transaction", async () => {
-    const { paramsForValidation } = await validate()
-
-    const params = paramsForValidation
-    params.push(transactionRequest.gasPrice)
-    params.push(transactionRequest.requiredDeposit)
+    const params = await getInitParams()
 
     // Create a request with the same args we validated
     const createTx = await requestFactory.createRequest(
@@ -271,5 +279,31 @@ contract("Request factory", async (accounts) => {
 
     requestData = await parseRequestData(txRequest)
     expect(requestData.txData.toAddress).to.equal(accounts[2])
+  })
+
+  it("should not allow to emit events for unknown address", async () => {
+    await requestFactory.emitExecuted()
+      .should.be.rejectedWith("VM Exception while processing transaction: revert")
+  })
+
+  it("should not allow to emit events for unknown transaction", async () => {
+    const params = await getInitParams()
+
+    const unknownRequest = await TransactionRequestCore.new()
+    await unknownRequest.initialize(
+      [
+        accounts[0],
+        accounts[0],
+        accounts[2],
+        accounts[3],
+        requestFactory.address
+      ],
+      params,
+      transactionRequest.testCallData,
+      { value: config.web3.utils.toWei("1") }
+    )
+
+    await unknownRequest.cancel()
+      .should.be.rejectedWith("VM Exception while processing transaction: revert")
   })
 })

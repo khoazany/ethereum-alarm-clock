@@ -100,6 +100,8 @@ contract("Schedule to execution flow", (accounts) => {
     expect(requestData.paymentData.fee).to.equal(98765)
 
     expect(requestData.paymentData.bounty).to.equal(80008)
+
+    expect(requestData.meta.requestFactory).to.equal(requestFactory.address)
   })
 
   it("should claim from an account", async () => {
@@ -123,6 +125,15 @@ contract("Schedule to execution flow", (accounts) => {
     })
 
     expect(executeTx.receipt).to.exist
+
+    const events = await new Promise(resolve => requestFactory.RequestStateChanged({})
+      .get((err, e) => resolve(e)))
+
+    const requestStateChanged = events[0]
+
+    expect(requestStateChanged).to.exist
+    expect(requestStateChanged.args.request).to.equal(txRequest.address)
+    expect(requestStateChanged.args.state.toNumber()).to.equal(0) // 0 is executed
 
     await requestData.refresh()
 

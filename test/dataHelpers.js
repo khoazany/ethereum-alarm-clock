@@ -60,6 +60,7 @@ const parseRequestData = async (transactionRequest) => {
       isCancelled: data[1][0],
       wasCalled: data[1][1],
       wasSuccessful: data[1][2],
+      requestFactory: data[0][6]
     },
 
     paymentData: {
@@ -109,6 +110,7 @@ class RequestData {
       isCancelled: data[1][0],
       wasCalled: data[1][1],
       wasSuccessful: data[1][2],
+      requestFactory: data[0][6]
     }
 
     this.paymentData = {
@@ -159,6 +161,7 @@ class RequestData {
       isCancelled: data[1][0],
       wasCalled: data[1][1],
       wasSuccessful: data[1][2],
+      requestFactory: data[0][6]
     }
 
     this.paymentData = {
