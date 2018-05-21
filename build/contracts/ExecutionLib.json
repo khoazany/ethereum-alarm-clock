@@ -1,24 +1,24 @@
 {
   "contractName": "ExecutionLib",
   "abi": [],
-  "bytecode": "0x604c602c600b82828239805160001a60731460008114601c57601e565bfe5b5030600052607381538281f30073000000000000000000000000000000000000000030146080604052600080fd00a165627a7a72305820e35b7bc93b8955562667f8b2ad6818ba5a04a2b6d99b2101f12e26ab553b883a0029",
-  "deployedBytecode": "0x73000000000000000000000000000000000000000030146080604052600080fd00a165627a7a72305820e35b7bc93b8955562667f8b2ad6818ba5a04a2b6d99b2101f12e26ab553b883a0029",
-  "sourceMap": "123:1915:20:-;;132:2:-1;166:7;155:9;146:7;137:37;252:7;246:14;243:1;238:23;232:4;229:33;270:1;265:20;;;;222:63;;265:20;274:9;222:63;;298:9;295:1;288:20;328:4;319:7;311:22;352:7;343;336:24",
-  "deployedSourceMap": "123:1915:20:-;;;;;;;;",
+  "bytecode": "0x604c602c600b82828239805160001a60731460008114601c57601e565bfe5b5030600052607381538281f30073000000000000000000000000000000000000000030146060604052600080fd00a165627a7a723058201924f31890d52673f519a11f6337d09c8c7c716b75b3d418490b2d204c95c7660029",
+  "deployedBytecode": "0x73000000000000000000000000000000000000000030146060604052600080fd00a165627a7a723058201924f31890d52673f519a11f6337d09c8c7c716b75b3d418490b2d204c95c7660029",
+  "sourceMap": "123:1915:30:-;;132:2:-1;166:7;155:9;146:7;137:37;252:7;246:14;243:1;238:23;232:4;229:33;270:1;265:20;;;;222:63;;265:20;274:9;222:63;;298:9;295:1;288:20;328:4;319:7;311:22;352:7;343;336:24",
+  "deployedSourceMap": "123:1915:30:-;;;;;;;;",
   "source": "pragma solidity ^0.4.21;\n\n/**\n * @title ExecutionLib\n * @dev Contains the logic for executing a scheduled transaction.\n */\nlibrary ExecutionLib {\n\n    struct ExecutionData {\n        address toAddress;                  /// The destination of the transaction.\n        bytes callData;                     /// The bytecode that will be sent with the transaction.\n        uint callValue;                     /// The wei value that will be sent with the transaction.\n        uint callGas;                       /// The amount of gas to be sent with the transaction.\n        uint gasPrice;                      /// The gasPrice that should be set for the transaction.\n    }\n\n    /**\n     * @dev Send the transaction according to the parameters outlined in ExecutionData.\n     * @param self The ExecutionData object.\n     */\n    function sendTransaction(ExecutionData storage self)\n        internal returns (bool)\n    {\n        /// Should never actually reach this require check, but here in case.\n        require(self.gasPrice == tx.gasprice);\n        /* solium-disable security/no-call-value */\n        return self.toAddress.call.value(self.callValue).gas(self.callGas)(self.callData);\n    }\n\n\n    /**\n     * Returns the maximum possible gas consumption that a transaction request\n     * may consume.  The EXTRA_GAS value represents the overhead involved in\n     * request execution.\n     */\n    function CALL_GAS_CEILING(uint EXTRA_GAS) \n        internal view returns (uint)\n    {\n        return block.gaslimit - EXTRA_GAS;\n    }\n\n    /*\n     * @dev Validation: ensure that the callGas is not above the total possible gas\n     * for a call.\n     */\n    function validateCallGas(uint callGas, uint EXTRA_GAS)\n        internal view returns (bool)\n    {\n        return callGas < CALL_GAS_CEILING(EXTRA_GAS);\n    }\n\n    /*\n     * @dev Validation: ensure that the toAddress is not set to the empty address.\n     */\n    function validateToAddress(address toAddress)\n        internal pure returns (bool)\n    {\n        return toAddress != 0x0;\n    }\n}\n",
   "sourcePath": "contracts/Library/ExecutionLib.sol",
   "ast": {
     "absolutePath": "contracts/Library/ExecutionLib.sol",
     "exportedSymbols": {
       "ExecutionLib": [
-        3937
+        4642
       ]
     },
-    "id": 3938,
+    "id": 4643,
     "nodeType": "SourceUnit",
     "nodes": [
       {
-        "id": 3853,
+        "id": 4558,
         "literals": [
           "solidity",
           "^",
@@ -26,7 +26,7 @@
           ".21"
         ],
         "nodeType": "PragmaDirective",
-        "src": "0:24:20"
+        "src": "0:24:30"
       },
       {
         "baseContracts": [],
@@ -34,24 +34,24 @@
         "contractKind": "library",
         "documentation": "@title ExecutionLib\n@dev Contains the logic for executing a scheduled transaction.",
         "fullyImplemented": true,
-        "id": 3937,
+        "id": 4642,
         "linearizedBaseContracts": [
-          3937
+          4642
         ],
         "name": "ExecutionLib",
         "nodeType": "ContractDefinition",
         "nodes": [
           {
             "canonicalName": "ExecutionLib.ExecutionData",
-            "id": 3864,
+            "id": 4569,
             "members": [
               {
                 "constant": false,
-                "id": 3855,
+                "id": 4560,
                 "name": "toAddress",
                 "nodeType": "VariableDeclaration",
-                "scope": 3864,
-                "src": "182:17:20",
+                "scope": 4569,
+                "src": "182:17:30",
                 "stateVariable": false,
                 "storageLocation": "default",
                 "typeDescriptions": {
@@ -59,10 +59,10 @@
                   "typeString": "address"
                 },
                 "typeName": {
-                  "id": 3854,
+                  "id": 4559,
                   "name": "address",
                   "nodeType": "ElementaryTypeName",
-                  "src": "182:7:20",
+                  "src": "182:7:30",
                   "typeDescriptions": {
                     "typeIdentifier": "t_address",
                     "typeString": "address"
@@ -73,25 +73,25 @@
               },
               {
                 "constant": false,
-                "id": 3857,
+                "id": 4562,
                 "name": "callData",
                 "nodeType": "VariableDeclaration",
-                "scope": 3864,
-                "src": "266:14:20",
+                "scope": 4569,
+                "src": "266:14:30",
                 "stateVariable": false,
                 "storageLocation": "default",
                 "typeDescriptions": {
                   "typeIdentifier": "t_bytes_storage_ptr",
-                  "typeString": "bytes"
+                  "typeString": "bytes storage pointer"
                 },
                 "typeName": {
-                  "id": 3856,
+                  "id": 4561,
                   "name": "bytes",
                   "nodeType": "ElementaryTypeName",
-                  "src": "266:5:20",
+                  "src": "266:5:30",
                   "typeDescriptions": {
                     "typeIdentifier": "t_bytes_storage_ptr",
-                    "typeString": "bytes"
+                    "typeString": "bytes storage pointer"
                   }
                 },
                 "value": null,
@@ -99,11 +99,11 @@
               },
               {
                 "constant": false,
-                "id": 3859,
+                "id": 4564,
                 "name": "callValue",
                 "nodeType": "VariableDeclaration",
-                "scope": 3864,
-                "src": "367:14:20",
+                "scope": 4569,
+                "src": "367:14:30",
                 "stateVariable": false,
                 "storageLocation": "default",
                 "typeDescriptions": {
@@ -111,10 +111,10 @@
                   "typeString": "uint256"
                 },
                 "typeName": {
-                  "id": 3858,
+                  "id": 4563,
                   "name": "uint",
                   "nodeType": "ElementaryTypeName",
-                  "src": "367:4:20",
+                  "src": "367:4:30",
                   "typeDescriptions": {
                     "typeIdentifier": "t_uint256",
                     "typeString": "uint256"
@@ -125,11 +125,11 @@
               },
               {
                 "constant": false,
-                "id": 3861,
+                "id": 4566,
                 "name": "callGas",
                 "nodeType": "VariableDeclaration",
-                "scope": 3864,
-                "src": "469:12:20",
+                "scope": 4569,
+                "src": "469:12:30",
                 "stateVariable": false,
                 "storageLocation": "default",
                 "typeDescriptions": {
@@ -137,10 +137,10 @@
                   "typeString": "uint256"
                 },
                 "typeName": {
-                  "id": 3860,
+                  "id": 4565,
                   "name": "uint",
                   "nodeType": "ElementaryTypeName",
-                  "src": "469:4:20",
+                  "src": "469:4:30",
                   "typeDescriptions": {
                     "typeIdentifier": "t_uint256",
                     "typeString": "uint256"
@@ -151,11 +151,11 @@
               },
               {
                 "constant": false,
-                "id": 3863,
+                "id": 4568,
                 "name": "gasPrice",
                 "nodeType": "VariableDeclaration",
-                "scope": 3864,
-                "src": "568:13:20",
+                "scope": 4569,
+                "src": "568:13:30",
                 "stateVariable": false,
                 "storageLocation": "default",
                 "typeDescriptions": {
@@ -163,10 +163,10 @@
                   "typeString": "uint256"
                 },
                 "typeName": {
-                  "id": 3862,
+                  "id": 4567,
                   "name": "uint",
                   "nodeType": "ElementaryTypeName",
-                  "src": "568:4:20",
+                  "src": "568:4:30",
                   "typeDescriptions": {
                     "typeIdentifier": "t_uint256",
                     "typeString": "uint256"
@@ -178,15 +178,15 @@
             ],
             "name": "ExecutionData",
             "nodeType": "StructDefinition",
-            "scope": 3937,
-            "src": "151:515:20",
+            "scope": 4642,
+            "src": "151:515:30",
             "visibility": "public"
           },
           {
             "body": {
-              "id": 3894,
+              "id": 4599,
               "nodeType": "Block",
-              "src": "910:275:20",
+              "src": "910:275:30",
               "statements": [
                 {
                   "expression": {
@@ -198,7 +198,7 @@
                           "typeIdentifier": "t_uint256",
                           "typeString": "uint256"
                         },
-                        "id": 3876,
+                        "id": 4581,
                         "isConstant": false,
                         "isLValue": false,
                         "isPure": false,
@@ -207,26 +207,26 @@
                           "argumentTypes": null,
                           "expression": {
                             "argumentTypes": null,
-                            "id": 3872,
+                            "id": 4577,
                             "name": "self",
                             "nodeType": "Identifier",
                             "overloadedDeclarations": [],
-                            "referencedDeclaration": 3866,
-                            "src": "1006:4:20",
+                            "referencedDeclaration": 4571,
+                            "src": "1006:4:30",
                             "typeDescriptions": {
-                              "typeIdentifier": "t_struct$_ExecutionData_$3864_storage_ptr",
+                              "typeIdentifier": "t_struct$_ExecutionData_$4569_storage_ptr",
                               "typeString": "struct ExecutionLib.ExecutionData storage pointer"
                             }
                           },
-                          "id": 3873,
+                          "id": 4578,
                           "isConstant": false,
                           "isLValue": true,
                           "isPure": false,
                           "lValueRequested": false,
                           "memberName": "gasPrice",
                           "nodeType": "MemberAccess",
-                          "referencedDeclaration": 3863,
-                          "src": "1006:13:20",
+                          "referencedDeclaration": 4568,
+                          "src": "1006:13:30",
                           "typeDescriptions": {
                             "typeIdentifier": "t_uint256",
                             "typeString": "uint256"
@@ -238,18 +238,18 @@
                           "argumentTypes": null,
                           "expression": {
                             "argumentTypes": null,
-                            "id": 3874,
+                            "id": 4579,
                             "name": "tx",
                             "nodeType": "Identifier",
                             "overloadedDeclarations": [],
-                            "referencedDeclaration": 6416,
-                            "src": "1023:2:20",
+                            "referencedDeclaration": 7340,
+                            "src": "1023:2:30",
                             "typeDescriptions": {
                               "typeIdentifier": "t_magic_transaction",
                               "typeString": "tx"
                             }
                           },
-                          "id": 3875,
+                          "id": 4580,
                           "isConstant": false,
                           "isLValue": false,
                           "isPure": false,
@@ -257,13 +257,13 @@
                           "memberName": "gasprice",
                           "nodeType": "MemberAccess",
                           "referencedDeclaration": null,
-                          "src": "1023:11:20",
+                          "src": "1023:11:30",
                           "typeDescriptions": {
                             "typeIdentifier": "t_uint256",
                             "typeString": "uint256"
                           }
                         },
-                        "src": "1006:28:20",
+                        "src": "1006:28:30",
                         "typeDescriptions": {
                           "typeIdentifier": "t_bool",
                           "typeString": "bool"
@@ -277,21 +277,18 @@
                           "typeString": "bool"
                         }
                       ],
-                      "id": 3871,
+                      "id": 4576,
                       "name": "require",
                       "nodeType": "Identifier",
-                      "overloadedDeclarations": [
-                        6407,
-                        6408
-                      ],
-                      "referencedDeclaration": 6407,
-                      "src": "998:7:20",
+                      "overloadedDeclarations": [],
+                      "referencedDeclaration": 7333,
+                      "src": "998:7:30",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_require_pure$_t_bool_$returns$__$",
                         "typeString": "function (bool) pure"
                       }
                     },
-                    "id": 3877,
+                    "id": 4582,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
@@ -299,15 +296,15 @@
                     "lValueRequested": false,
                     "names": [],
                     "nodeType": "FunctionCall",
-                    "src": "998:37:20",
+                    "src": "998:37:30",
                     "typeDescriptions": {
                       "typeIdentifier": "t_tuple$__$",
                       "typeString": "tuple()"
                     }
                   },
-                  "id": 3878,
+                  "id": 4583,
                   "nodeType": "ExpressionStatement",
-                  "src": "998:37:20"
+                  "src": "998:37:30"
                 },
                 {
                   "expression": {
@@ -317,26 +314,26 @@
                         "argumentTypes": null,
                         "expression": {
                           "argumentTypes": null,
-                          "id": 3890,
+                          "id": 4595,
                           "name": "self",
                           "nodeType": "Identifier",
                           "overloadedDeclarations": [],
-                          "referencedDeclaration": 3866,
-                          "src": "1164:4:20",
+                          "referencedDeclaration": 4571,
+                          "src": "1164:4:30",
                           "typeDescriptions": {
-                            "typeIdentifier": "t_struct$_ExecutionData_$3864_storage_ptr",
+                            "typeIdentifier": "t_struct$_ExecutionData_$4569_storage_ptr",
                             "typeString": "struct ExecutionLib.ExecutionData storage pointer"
                           }
                         },
-                        "id": 3891,
+                        "id": 4596,
                         "isConstant": false,
                         "isLValue": true,
                         "isPure": false,
                         "lValueRequested": false,
                         "memberName": "callData",
                         "nodeType": "MemberAccess",
-                        "referencedDeclaration": 3857,
-                        "src": "1164:13:20",
+                        "referencedDeclaration": 4562,
+                        "src": "1164:13:30",
                         "typeDescriptions": {
                           "typeIdentifier": "t_bytes_storage",
                           "typeString": "bytes storage ref"
@@ -355,26 +352,26 @@
                           "argumentTypes": null,
                           "expression": {
                             "argumentTypes": null,
-                            "id": 3887,
+                            "id": 4592,
                             "name": "self",
                             "nodeType": "Identifier",
                             "overloadedDeclarations": [],
-                            "referencedDeclaration": 3866,
-                            "src": "1150:4:20",
+                            "referencedDeclaration": 4571,
+                            "src": "1150:4:30",
                             "typeDescriptions": {
-                              "typeIdentifier": "t_struct$_ExecutionData_$3864_storage_ptr",
+                              "typeIdentifier": "t_struct$_ExecutionData_$4569_storage_ptr",
                               "typeString": "struct ExecutionLib.ExecutionData storage pointer"
                             }
                           },
-                          "id": 3888,
+                          "id": 4593,
                           "isConstant": false,
                           "isLValue": true,
                           "isPure": false,
                           "lValueRequested": false,
                           "memberName": "callGas",
                           "nodeType": "MemberAccess",
-                          "referencedDeclaration": 3861,
-                          "src": "1150:12:20",
+                          "referencedDeclaration": 4566,
+                          "src": "1150:12:30",
                           "typeDescriptions": {
                             "typeIdentifier": "t_uint256",
                             "typeString": "uint256"
@@ -395,26 +392,26 @@
                               "argumentTypes": null,
                               "expression": {
                                 "argumentTypes": null,
-                                "id": 3883,
+                                "id": 4588,
                                 "name": "self",
                                 "nodeType": "Identifier",
                                 "overloadedDeclarations": [],
-                                "referencedDeclaration": 3866,
-                                "src": "1130:4:20",
+                                "referencedDeclaration": 4571,
+                                "src": "1130:4:30",
                                 "typeDescriptions": {
-                                  "typeIdentifier": "t_struct$_ExecutionData_$3864_storage_ptr",
+                                  "typeIdentifier": "t_struct$_ExecutionData_$4569_storage_ptr",
                                   "typeString": "struct ExecutionLib.ExecutionData storage pointer"
                                 }
                               },
-                              "id": 3884,
+                              "id": 4589,
                               "isConstant": false,
                               "isLValue": true,
                               "isPure": false,
                               "lValueRequested": false,
                               "memberName": "callValue",
                               "nodeType": "MemberAccess",
-                              "referencedDeclaration": 3859,
-                              "src": "1130:14:20",
+                              "referencedDeclaration": 4564,
+                              "src": "1130:14:30",
                               "typeDescriptions": {
                                 "typeIdentifier": "t_uint256",
                                 "typeString": "uint256"
@@ -434,32 +431,32 @@
                                 "argumentTypes": null,
                                 "expression": {
                                   "argumentTypes": null,
-                                  "id": 3879,
+                                  "id": 4584,
                                   "name": "self",
                                   "nodeType": "Identifier",
                                   "overloadedDeclarations": [],
-                                  "referencedDeclaration": 3866,
-                                  "src": "1104:4:20",
+                                  "referencedDeclaration": 4571,
+                                  "src": "1104:4:30",
                                   "typeDescriptions": {
-                                    "typeIdentifier": "t_struct$_ExecutionData_$3864_storage_ptr",
+                                    "typeIdentifier": "t_struct$_ExecutionData_$4569_storage_ptr",
                                     "typeString": "struct ExecutionLib.ExecutionData storage pointer"
                                   }
                                 },
-                                "id": 3880,
+                                "id": 4585,
                                 "isConstant": false,
                                 "isLValue": true,
                                 "isPure": false,
                                 "lValueRequested": false,
                                 "memberName": "toAddress",
                                 "nodeType": "MemberAccess",
-                                "referencedDeclaration": 3855,
-                                "src": "1104:14:20",
+                                "referencedDeclaration": 4560,
+                                "src": "1104:14:30",
                                 "typeDescriptions": {
                                   "typeIdentifier": "t_address",
                                   "typeString": "address"
                                 }
                               },
-                              "id": 3881,
+                              "id": 4586,
                               "isConstant": false,
                               "isLValue": false,
                               "isPure": false,
@@ -467,13 +464,13 @@
                               "memberName": "call",
                               "nodeType": "MemberAccess",
                               "referencedDeclaration": null,
-                              "src": "1104:19:20",
+                              "src": "1104:19:30",
                               "typeDescriptions": {
                                 "typeIdentifier": "t_function_barecall_payable$__$returns$_t_bool_$",
                                 "typeString": "function () payable returns (bool)"
                               }
                             },
-                            "id": 3882,
+                            "id": 4587,
                             "isConstant": false,
                             "isLValue": false,
                             "isPure": false,
@@ -481,13 +478,13 @@
                             "memberName": "value",
                             "nodeType": "MemberAccess",
                             "referencedDeclaration": null,
-                            "src": "1104:25:20",
+                            "src": "1104:25:30",
                             "typeDescriptions": {
                               "typeIdentifier": "t_function_setvalue_nonpayable$_t_uint256_$returns$_t_function_barecall_payable$__$returns$_t_bool_$value_$",
                               "typeString": "function (uint256) returns (function () payable returns (bool))"
                             }
                           },
-                          "id": 3885,
+                          "id": 4590,
                           "isConstant": false,
                           "isLValue": false,
                           "isPure": false,
@@ -495,13 +492,13 @@
                           "lValueRequested": false,
                           "names": [],
                           "nodeType": "FunctionCall",
-                          "src": "1104:41:20",
+                          "src": "1104:41:30",
                           "typeDescriptions": {
                             "typeIdentifier": "t_function_barecall_payable$__$returns$_t_bool_$value",
                             "typeString": "function () payable returns (bool)"
                           }
                         },
-                        "id": 3886,
+                        "id": 4591,
                         "isConstant": false,
                         "isLValue": false,
                         "isPure": false,
@@ -509,13 +506,13 @@
                         "memberName": "gas",
                         "nodeType": "MemberAccess",
                         "referencedDeclaration": null,
-                        "src": "1104:45:20",
+                        "src": "1104:45:30",
                         "typeDescriptions": {
                           "typeIdentifier": "t_function_setgas_nonpayable$_t_uint256_$returns$_t_function_barecall_payable$__$returns$_t_bool_$gasvalue_$value",
                           "typeString": "function (uint256) returns (function () payable returns (bool))"
                         }
                       },
-                      "id": 3889,
+                      "id": 4594,
                       "isConstant": false,
                       "isLValue": false,
                       "isPure": false,
@@ -523,13 +520,13 @@
                       "lValueRequested": false,
                       "names": [],
                       "nodeType": "FunctionCall",
-                      "src": "1104:59:20",
+                      "src": "1104:59:30",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_barecall_payable$__$returns$_t_bool_$gasvalue",
                         "typeString": "function () payable returns (bool)"
                       }
                     },
-                    "id": 3892,
+                    "id": 4597,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
@@ -537,21 +534,21 @@
                     "lValueRequested": false,
                     "names": [],
                     "nodeType": "FunctionCall",
-                    "src": "1104:74:20",
+                    "src": "1104:74:30",
                     "typeDescriptions": {
                       "typeIdentifier": "t_bool",
                       "typeString": "bool"
                     }
                   },
-                  "functionReturnParameters": 3870,
-                  "id": 3893,
+                  "functionReturnParameters": 4575,
+                  "id": 4598,
                   "nodeType": "Return",
-                  "src": "1097:81:20"
+                  "src": "1097:81:30"
                 }
               ]
             },
             "documentation": "@dev Send the transaction according to the parameters outlined in ExecutionData.\n@param self The ExecutionData object.",
-            "id": 3895,
+            "id": 4600,
             "implemented": true,
             "isConstructor": false,
             "isDeclaredConst": false,
@@ -559,52 +556,52 @@
             "name": "sendTransaction",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 3867,
+              "id": 4572,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 3866,
+                  "id": 4571,
                   "name": "self",
                   "nodeType": "VariableDeclaration",
-                  "scope": 3895,
-                  "src": "846:26:20",
+                  "scope": 4600,
+                  "src": "846:26:30",
                   "stateVariable": false,
                   "storageLocation": "storage",
                   "typeDescriptions": {
-                    "typeIdentifier": "t_struct$_ExecutionData_$3864_storage_ptr",
-                    "typeString": "struct ExecutionLib.ExecutionData"
+                    "typeIdentifier": "t_struct$_ExecutionData_$4569_storage_ptr",
+                    "typeString": "struct ExecutionLib.ExecutionData storage pointer"
                   },
                   "typeName": {
                     "contractScope": null,
-                    "id": 3865,
+                    "id": 4570,
                     "name": "ExecutionData",
                     "nodeType": "UserDefinedTypeName",
-                    "referencedDeclaration": 3864,
-                    "src": "846:13:20",
+                    "referencedDeclaration": 4569,
+                    "src": "846:13:30",
                     "typeDescriptions": {
-                      "typeIdentifier": "t_struct$_ExecutionData_$3864_storage_ptr",
-                      "typeString": "struct ExecutionLib.ExecutionData"
+                      "typeIdentifier": "t_struct$_ExecutionData_$4569_storage_ptr",
+                      "typeString": "struct ExecutionLib.ExecutionData storage pointer"
                     }
                   },
                   "value": null,
                   "visibility": "internal"
                 }
               ],
-              "src": "845:28:20"
+              "src": "845:28:30"
             },
             "payable": false,
             "returnParameters": {
-              "id": 3870,
+              "id": 4575,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 3869,
+                  "id": 4574,
                   "name": "",
                   "nodeType": "VariableDeclaration",
-                  "scope": 3895,
-                  "src": "900:4:20",
+                  "scope": 4600,
+                  "src": "900:4:30",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -612,10 +609,10 @@
                     "typeString": "bool"
                   },
                   "typeName": {
-                    "id": 3868,
+                    "id": 4573,
                     "name": "bool",
                     "nodeType": "ElementaryTypeName",
-                    "src": "900:4:20",
+                    "src": "900:4:30",
                     "typeDescriptions": {
                       "typeIdentifier": "t_bool",
                       "typeString": "bool"
@@ -625,19 +622,19 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "899:6:20"
+              "src": "899:6:30"
             },
-            "scope": 3937,
-            "src": "821:364:20",
+            "scope": 4642,
+            "src": "821:364:30",
             "stateMutability": "nonpayable",
             "superFunction": null,
             "visibility": "internal"
           },
           {
             "body": {
-              "id": 3907,
+              "id": 4612,
               "nodeType": "Block",
-              "src": "1474:50:20",
+              "src": "1474:50:30",
               "statements": [
                 {
                   "expression": {
@@ -646,7 +643,7 @@
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
                     },
-                    "id": 3905,
+                    "id": 4610,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
@@ -655,18 +652,18 @@
                       "argumentTypes": null,
                       "expression": {
                         "argumentTypes": null,
-                        "id": 3902,
+                        "id": 4607,
                         "name": "block",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 6394,
-                        "src": "1491:5:20",
+                        "referencedDeclaration": 7321,
+                        "src": "1491:5:30",
                         "typeDescriptions": {
                           "typeIdentifier": "t_magic_block",
                           "typeString": "block"
                         }
                       },
-                      "id": 3903,
+                      "id": 4608,
                       "isConstant": false,
                       "isLValue": false,
                       "isPure": false,
@@ -674,7 +671,7 @@
                       "memberName": "gaslimit",
                       "nodeType": "MemberAccess",
                       "referencedDeclaration": null,
-                      "src": "1491:14:20",
+                      "src": "1491:14:30",
                       "typeDescriptions": {
                         "typeIdentifier": "t_uint256",
                         "typeString": "uint256"
@@ -684,32 +681,32 @@
                     "operator": "-",
                     "rightExpression": {
                       "argumentTypes": null,
-                      "id": 3904,
+                      "id": 4609,
                       "name": "EXTRA_GAS",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [],
-                      "referencedDeclaration": 3897,
-                      "src": "1508:9:20",
+                      "referencedDeclaration": 4602,
+                      "src": "1508:9:30",
                       "typeDescriptions": {
                         "typeIdentifier": "t_uint256",
                         "typeString": "uint256"
                       }
                     },
-                    "src": "1491:26:20",
+                    "src": "1491:26:30",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
                     }
                   },
-                  "functionReturnParameters": 3901,
-                  "id": 3906,
+                  "functionReturnParameters": 4606,
+                  "id": 4611,
                   "nodeType": "Return",
-                  "src": "1484:33:20"
+                  "src": "1484:33:30"
                 }
               ]
             },
             "documentation": "Returns the maximum possible gas consumption that a transaction request\nmay consume.  The EXTRA_GAS value represents the overhead involved in\nrequest execution.",
-            "id": 3908,
+            "id": 4613,
             "implemented": true,
             "isConstructor": false,
             "isDeclaredConst": true,
@@ -717,16 +714,16 @@
             "name": "CALL_GAS_CEILING",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 3898,
+              "id": 4603,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 3897,
+                  "id": 4602,
                   "name": "EXTRA_GAS",
                   "nodeType": "VariableDeclaration",
-                  "scope": 3908,
-                  "src": "1416:14:20",
+                  "scope": 4613,
+                  "src": "1416:14:30",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -734,10 +731,10 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 3896,
+                    "id": 4601,
                     "name": "uint",
                     "nodeType": "ElementaryTypeName",
-                    "src": "1416:4:20",
+                    "src": "1416:4:30",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
@@ -747,20 +744,20 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "1415:16:20"
+              "src": "1415:16:30"
             },
             "payable": false,
             "returnParameters": {
-              "id": 3901,
+              "id": 4606,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 3900,
+                  "id": 4605,
                   "name": "",
                   "nodeType": "VariableDeclaration",
-                  "scope": 3908,
-                  "src": "1464:4:20",
+                  "scope": 4613,
+                  "src": "1464:4:30",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -768,10 +765,10 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 3899,
+                    "id": 4604,
                     "name": "uint",
                     "nodeType": "ElementaryTypeName",
-                    "src": "1464:4:20",
+                    "src": "1464:4:30",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
@@ -781,19 +778,19 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "1463:6:20"
+              "src": "1463:6:30"
             },
-            "scope": 3937,
-            "src": "1390:134:20",
+            "scope": 4642,
+            "src": "1390:134:30",
             "stateMutability": "view",
             "superFunction": null,
             "visibility": "internal"
           },
           {
             "body": {
-              "id": 3923,
+              "id": 4628,
               "nodeType": "Block",
-              "src": "1744:61:20",
+              "src": "1744:61:30",
               "statements": [
                 {
                   "expression": {
@@ -802,19 +799,19 @@
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
                     },
-                    "id": 3921,
+                    "id": 4626,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
                     "lValueRequested": false,
                     "leftExpression": {
                       "argumentTypes": null,
-                      "id": 3917,
+                      "id": 4622,
                       "name": "callGas",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [],
-                      "referencedDeclaration": 3910,
-                      "src": "1761:7:20",
+                      "referencedDeclaration": 4615,
+                      "src": "1761:7:30",
                       "typeDescriptions": {
                         "typeIdentifier": "t_uint256",
                         "typeString": "uint256"
@@ -827,12 +824,12 @@
                       "arguments": [
                         {
                           "argumentTypes": null,
-                          "id": 3919,
+                          "id": 4624,
                           "name": "EXTRA_GAS",
                           "nodeType": "Identifier",
                           "overloadedDeclarations": [],
-                          "referencedDeclaration": 3912,
-                          "src": "1788:9:20",
+                          "referencedDeclaration": 4617,
+                          "src": "1788:9:30",
                           "typeDescriptions": {
                             "typeIdentifier": "t_uint256",
                             "typeString": "uint256"
@@ -846,18 +843,18 @@
                             "typeString": "uint256"
                           }
                         ],
-                        "id": 3918,
+                        "id": 4623,
                         "name": "CALL_GAS_CEILING",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 3908,
-                        "src": "1771:16:20",
+                        "referencedDeclaration": 4613,
+                        "src": "1771:16:30",
                         "typeDescriptions": {
                           "typeIdentifier": "t_function_internal_view$_t_uint256_$returns$_t_uint256_$",
                           "typeString": "function (uint256) view returns (uint256)"
                         }
                       },
-                      "id": 3920,
+                      "id": 4625,
                       "isConstant": false,
                       "isLValue": false,
                       "isPure": false,
@@ -865,27 +862,27 @@
                       "lValueRequested": false,
                       "names": [],
                       "nodeType": "FunctionCall",
-                      "src": "1771:27:20",
+                      "src": "1771:27:30",
                       "typeDescriptions": {
                         "typeIdentifier": "t_uint256",
                         "typeString": "uint256"
                       }
                     },
-                    "src": "1761:37:20",
+                    "src": "1761:37:30",
                     "typeDescriptions": {
                       "typeIdentifier": "t_bool",
                       "typeString": "bool"
                     }
                   },
-                  "functionReturnParameters": 3916,
-                  "id": 3922,
+                  "functionReturnParameters": 4621,
+                  "id": 4627,
                   "nodeType": "Return",
-                  "src": "1754:44:20"
+                  "src": "1754:44:30"
                 }
               ]
             },
             "documentation": null,
-            "id": 3924,
+            "id": 4629,
             "implemented": true,
             "isConstructor": false,
             "isDeclaredConst": true,
@@ -893,16 +890,16 @@
             "name": "validateCallGas",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 3913,
+              "id": 4618,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 3910,
+                  "id": 4615,
                   "name": "callGas",
                   "nodeType": "VariableDeclaration",
-                  "scope": 3924,
-                  "src": "1673:12:20",
+                  "scope": 4629,
+                  "src": "1673:12:30",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -910,10 +907,10 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 3909,
+                    "id": 4614,
                     "name": "uint",
                     "nodeType": "ElementaryTypeName",
-                    "src": "1673:4:20",
+                    "src": "1673:4:30",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
@@ -924,11 +921,11 @@
                 },
                 {
                   "constant": false,
-                  "id": 3912,
+                  "id": 4617,
                   "name": "EXTRA_GAS",
                   "nodeType": "VariableDeclaration",
-                  "scope": 3924,
-                  "src": "1687:14:20",
+                  "scope": 4629,
+                  "src": "1687:14:30",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -936,10 +933,10 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 3911,
+                    "id": 4616,
                     "name": "uint",
                     "nodeType": "ElementaryTypeName",
-                    "src": "1687:4:20",
+                    "src": "1687:4:30",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
@@ -949,20 +946,20 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "1672:30:20"
+              "src": "1672:30:30"
             },
             "payable": false,
             "returnParameters": {
-              "id": 3916,
+              "id": 4621,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 3915,
+                  "id": 4620,
                   "name": "",
                   "nodeType": "VariableDeclaration",
-                  "scope": 3924,
-                  "src": "1734:4:20",
+                  "scope": 4629,
+                  "src": "1734:4:30",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -970,10 +967,10 @@
                     "typeString": "bool"
                   },
                   "typeName": {
-                    "id": 3914,
+                    "id": 4619,
                     "name": "bool",
                     "nodeType": "ElementaryTypeName",
-                    "src": "1734:4:20",
+                    "src": "1734:4:30",
                     "typeDescriptions": {
                       "typeIdentifier": "t_bool",
                       "typeString": "bool"
@@ -983,19 +980,19 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "1733:6:20"
+              "src": "1733:6:30"
             },
-            "scope": 3937,
-            "src": "1648:157:20",
+            "scope": 4642,
+            "src": "1648:157:30",
             "stateMutability": "view",
             "superFunction": null,
             "visibility": "internal"
           },
           {
             "body": {
-              "id": 3935,
+              "id": 4640,
               "nodeType": "Block",
-              "src": "1996:40:20",
+              "src": "1996:40:30",
               "statements": [
                 {
                   "expression": {
@@ -1004,19 +1001,19 @@
                       "typeIdentifier": "t_address",
                       "typeString": "address"
                     },
-                    "id": 3933,
+                    "id": 4638,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
                     "lValueRequested": false,
                     "leftExpression": {
                       "argumentTypes": null,
-                      "id": 3931,
+                      "id": 4636,
                       "name": "toAddress",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [],
-                      "referencedDeclaration": 3926,
-                      "src": "2013:9:20",
+                      "referencedDeclaration": 4631,
+                      "src": "2013:9:30",
                       "typeDescriptions": {
                         "typeIdentifier": "t_address",
                         "typeString": "address"
@@ -1027,14 +1024,14 @@
                     "rightExpression": {
                       "argumentTypes": null,
                       "hexValue": "307830",
-                      "id": 3932,
+                      "id": 4637,
                       "isConstant": false,
                       "isLValue": false,
                       "isPure": true,
                       "kind": "number",
                       "lValueRequested": false,
                       "nodeType": "Literal",
-                      "src": "2026:3:20",
+                      "src": "2026:3:30",
                       "subdenomination": null,
                       "typeDescriptions": {
                         "typeIdentifier": "t_rational_0_by_1",
@@ -1042,21 +1039,21 @@
                       },
                       "value": "0x0"
                     },
-                    "src": "2013:16:20",
+                    "src": "2013:16:30",
                     "typeDescriptions": {
                       "typeIdentifier": "t_bool",
                       "typeString": "bool"
                     }
                   },
-                  "functionReturnParameters": 3930,
-                  "id": 3934,
+                  "functionReturnParameters": 4635,
+                  "id": 4639,
                   "nodeType": "Return",
-                  "src": "2006:23:20"
+                  "src": "2006:23:30"
                 }
               ]
             },
             "documentation": null,
-            "id": 3936,
+            "id": 4641,
             "implemented": true,
             "isConstructor": false,
             "isDeclaredConst": true,
@@ -1064,16 +1061,16 @@
             "name": "validateToAddress",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 3927,
+              "id": 4632,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 3926,
+                  "id": 4631,
                   "name": "toAddress",
                   "nodeType": "VariableDeclaration",
-                  "scope": 3936,
-                  "src": "1936:17:20",
+                  "scope": 4641,
+                  "src": "1936:17:30",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -1081,10 +1078,10 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 3925,
+                    "id": 4630,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
-                    "src": "1936:7:20",
+                    "src": "1936:7:30",
                     "typeDescriptions": {
                       "typeIdentifier": "t_address",
                       "typeString": "address"
@@ -1094,20 +1091,20 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "1935:19:20"
+              "src": "1935:19:30"
             },
             "payable": false,
             "returnParameters": {
-              "id": 3930,
+              "id": 4635,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 3929,
+                  "id": 4634,
                   "name": "",
                   "nodeType": "VariableDeclaration",
-                  "scope": 3936,
-                  "src": "1986:4:20",
+                  "scope": 4641,
+                  "src": "1986:4:30",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -1115,10 +1112,10 @@
                     "typeString": "bool"
                   },
                   "typeName": {
-                    "id": 3928,
+                    "id": 4633,
                     "name": "bool",
                     "nodeType": "ElementaryTypeName",
-                    "src": "1986:4:20",
+                    "src": "1986:4:30",
                     "typeDescriptions": {
                       "typeIdentifier": "t_bool",
                       "typeString": "bool"
@@ -1128,33 +1125,33 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "1985:6:20"
+              "src": "1985:6:30"
             },
-            "scope": 3937,
-            "src": "1909:127:20",
+            "scope": 4642,
+            "src": "1909:127:30",
             "stateMutability": "pure",
             "superFunction": null,
             "visibility": "internal"
           }
         ],
-        "scope": 3938,
-        "src": "123:1915:20"
+        "scope": 4643,
+        "src": "123:1915:30"
       }
     ],
-    "src": "0:2039:20"
+    "src": "0:2039:30"
   },
   "legacyAST": {
     "absolutePath": "contracts/Library/ExecutionLib.sol",
     "exportedSymbols": {
       "ExecutionLib": [
-        3937
+        4642
       ]
     },
-    "id": 3938,
+    "id": 4643,
     "nodeType": "SourceUnit",
     "nodes": [
       {
-        "id": 3853,
+        "id": 4558,
         "literals": [
           "solidity",
           "^",
@@ -1162,7 +1159,7 @@
           ".21"
         ],
         "nodeType": "PragmaDirective",
-        "src": "0:24:20"
+        "src": "0:24:30"
       },
       {
         "baseContracts": [],
@@ -1170,24 +1167,24 @@
         "contractKind": "library",
         "documentation": "@title ExecutionLib\n@dev Contains the logic for executing a scheduled transaction.",
         "fullyImplemented": true,
-        "id": 3937,
+        "id": 4642,
         "linearizedBaseContracts": [
-          3937
+          4642
         ],
         "name": "ExecutionLib",
         "nodeType": "ContractDefinition",
         "nodes": [
           {
             "canonicalName": "ExecutionLib.ExecutionData",
-            "id": 3864,
+            "id": 4569,
             "members": [
               {
                 "constant": false,
-                "id": 3855,
+                "id": 4560,
                 "name": "toAddress",
                 "nodeType": "VariableDeclaration",
-                "scope": 3864,
-                "src": "182:17:20",
+                "scope": 4569,
+                "src": "182:17:30",
                 "stateVariable": false,
                 "storageLocation": "default",
                 "typeDescriptions": {
@@ -1195,10 +1192,10 @@
                   "typeString": "address"
                 },
                 "typeName": {
-                  "id": 3854,
+                  "id": 4559,
                   "name": "address",
                   "nodeType": "ElementaryTypeName",
-                  "src": "182:7:20",
+                  "src": "182:7:30",
                   "typeDescriptions": {
                     "typeIdentifier": "t_address",
                     "typeString": "address"
@@ -1209,25 +1206,25 @@
               },
               {
                 "constant": false,
-                "id": 3857,
+                "id": 4562,
                 "name": "callData",
                 "nodeType": "VariableDeclaration",
-                "scope": 3864,
-                "src": "266:14:20",
+                "scope": 4569,
+                "src": "266:14:30",
                 "stateVariable": false,
                 "storageLocation": "default",
                 "typeDescriptions": {
                   "typeIdentifier": "t_bytes_storage_ptr",
-                  "typeString": "bytes"
+                  "typeString": "bytes storage pointer"
                 },
                 "typeName": {
-                  "id": 3856,
+                  "id": 4561,
                   "name": "bytes",
                   "nodeType": "ElementaryTypeName",
-                  "src": "266:5:20",
+                  "src": "266:5:30",
                   "typeDescriptions": {
                     "typeIdentifier": "t_bytes_storage_ptr",
-                    "typeString": "bytes"
+                    "typeString": "bytes storage pointer"
                   }
                 },
                 "value": null,
@@ -1235,11 +1232,11 @@
               },
               {
                 "constant": false,
-                "id": 3859,
+                "id": 4564,
                 "name": "callValue",
                 "nodeType": "VariableDeclaration",
-                "scope": 3864,
-                "src": "367:14:20",
+                "scope": 4569,
+                "src": "367:14:30",
                 "stateVariable": false,
                 "storageLocation": "default",
                 "typeDescriptions": {
@@ -1247,10 +1244,10 @@
                   "typeString": "uint256"
                 },
                 "typeName": {
-                  "id": 3858,
+                  "id": 4563,
                   "name": "uint",
                   "nodeType": "ElementaryTypeName",
-                  "src": "367:4:20",
+                  "src": "367:4:30",
                   "typeDescriptions": {
                     "typeIdentifier": "t_uint256",
                     "typeString": "uint256"
@@ -1261,11 +1258,11 @@
               },
               {
                 "constant": false,
-                "id": 3861,
+                "id": 4566,
                 "name": "callGas",
                 "nodeType": "VariableDeclaration",
-                "scope": 3864,
-                "src": "469:12:20",
+                "scope": 4569,
+                "src": "469:12:30",
                 "stateVariable": false,
                 "storageLocation": "default",
                 "typeDescriptions": {
@@ -1273,10 +1270,10 @@
                   "typeString": "uint256"
                 },
                 "typeName": {
-                  "id": 3860,
+                  "id": 4565,
                   "name": "uint",
                   "nodeType": "ElementaryTypeName",
-                  "src": "469:4:20",
+                  "src": "469:4:30",
                   "typeDescriptions": {
                     "typeIdentifier": "t_uint256",
                     "typeString": "uint256"
@@ -1287,11 +1284,11 @@
               },
               {
                 "constant": false,
-                "id": 3863,
+                "id": 4568,
                 "name": "gasPrice",
                 "nodeType": "VariableDeclaration",
-                "scope": 3864,
-                "src": "568:13:20",
+                "scope": 4569,
+                "src": "568:13:30",
                 "stateVariable": false,
                 "storageLocation": "default",
                 "typeDescriptions": {
@@ -1299,10 +1296,10 @@
                   "typeString": "uint256"
                 },
                 "typeName": {
-                  "id": 3862,
+                  "id": 4567,
                   "name": "uint",
                   "nodeType": "ElementaryTypeName",
-                  "src": "568:4:20",
+                  "src": "568:4:30",
                   "typeDescriptions": {
                     "typeIdentifier": "t_uint256",
                     "typeString": "uint256"
@@ -1314,15 +1311,15 @@
             ],
             "name": "ExecutionData",
             "nodeType": "StructDefinition",
-            "scope": 3937,
-            "src": "151:515:20",
+            "scope": 4642,
+            "src": "151:515:30",
             "visibility": "public"
           },
           {
             "body": {
-              "id": 3894,
+              "id": 4599,
               "nodeType": "Block",
-              "src": "910:275:20",
+              "src": "910:275:30",
               "statements": [
                 {
                   "expression": {
@@ -1334,7 +1331,7 @@
                           "typeIdentifier": "t_uint256",
                           "typeString": "uint256"
                         },
-                        "id": 3876,
+                        "id": 4581,
                         "isConstant": false,
                         "isLValue": false,
                         "isPure": false,
@@ -1343,26 +1340,26 @@
                           "argumentTypes": null,
                           "expression": {
                             "argumentTypes": null,
-                            "id": 3872,
+                            "id": 4577,
                             "name": "self",
                             "nodeType": "Identifier",
                             "overloadedDeclarations": [],
-                            "referencedDeclaration": 3866,
-                            "src": "1006:4:20",
+                            "referencedDeclaration": 4571,
+                            "src": "1006:4:30",
                             "typeDescriptions": {
-                              "typeIdentifier": "t_struct$_ExecutionData_$3864_storage_ptr",
+                              "typeIdentifier": "t_struct$_ExecutionData_$4569_storage_ptr",
                               "typeString": "struct ExecutionLib.ExecutionData storage pointer"
                             }
                           },
-                          "id": 3873,
+                          "id": 4578,
                           "isConstant": false,
                           "isLValue": true,
                           "isPure": false,
                           "lValueRequested": false,
                           "memberName": "gasPrice",
                           "nodeType": "MemberAccess",
-                          "referencedDeclaration": 3863,
-                          "src": "1006:13:20",
+                          "referencedDeclaration": 4568,
+                          "src": "1006:13:30",
                           "typeDescriptions": {
                             "typeIdentifier": "t_uint256",
                             "typeString": "uint256"
@@ -1374,18 +1371,18 @@
                           "argumentTypes": null,
                           "expression": {
                             "argumentTypes": null,
-                            "id": 3874,
+                            "id": 4579,
                             "name": "tx",
                             "nodeType": "Identifier",
                             "overloadedDeclarations": [],
-                            "referencedDeclaration": 6416,
-                            "src": "1023:2:20",
+                            "referencedDeclaration": 7340,
+                            "src": "1023:2:30",
                             "typeDescriptions": {
                               "typeIdentifier": "t_magic_transaction",
                               "typeString": "tx"
                             }
                           },
-                          "id": 3875,
+                          "id": 4580,
                           "isConstant": false,
                           "isLValue": false,
                           "isPure": false,
@@ -1393,13 +1390,13 @@
                           "memberName": "gasprice",
                           "nodeType": "MemberAccess",
                           "referencedDeclaration": null,
-                          "src": "1023:11:20",
+                          "src": "1023:11:30",
                           "typeDescriptions": {
                             "typeIdentifier": "t_uint256",
                             "typeString": "uint256"
                           }
                         },
-                        "src": "1006:28:20",
+                        "src": "1006:28:30",
                         "typeDescriptions": {
                           "typeIdentifier": "t_bool",
                           "typeString": "bool"
@@ -1413,21 +1410,18 @@
                           "typeString": "bool"
                         }
                       ],
-                      "id": 3871,
+                      "id": 4576,
                       "name": "require",
                       "nodeType": "Identifier",
-                      "overloadedDeclarations": [
-                        6407,
-                        6408
-                      ],
-                      "referencedDeclaration": 6407,
-                      "src": "998:7:20",
+                      "overloadedDeclarations": [],
+                      "referencedDeclaration": 7333,
+                      "src": "998:7:30",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_require_pure$_t_bool_$returns$__$",
                         "typeString": "function (bool) pure"
                       }
                     },
-                    "id": 3877,
+                    "id": 4582,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
@@ -1435,15 +1429,15 @@
                     "lValueRequested": false,
                     "names": [],
                     "nodeType": "FunctionCall",
-                    "src": "998:37:20",
+                    "src": "998:37:30",
                     "typeDescriptions": {
                       "typeIdentifier": "t_tuple$__$",
                       "typeString": "tuple()"
                     }
                   },
-                  "id": 3878,
+                  "id": 4583,
                   "nodeType": "ExpressionStatement",
-                  "src": "998:37:20"
+                  "src": "998:37:30"
                 },
                 {
                   "expression": {
@@ -1453,26 +1447,26 @@
                         "argumentTypes": null,
                         "expression": {
                           "argumentTypes": null,
-                          "id": 3890,
+                          "id": 4595,
                           "name": "self",
                           "nodeType": "Identifier",
                           "overloadedDeclarations": [],
-                          "referencedDeclaration": 3866,
-                          "src": "1164:4:20",
+                          "referencedDeclaration": 4571,
+                          "src": "1164:4:30",
                           "typeDescriptions": {
-                            "typeIdentifier": "t_struct$_ExecutionData_$3864_storage_ptr",
+                            "typeIdentifier": "t_struct$_ExecutionData_$4569_storage_ptr",
                             "typeString": "struct ExecutionLib.ExecutionData storage pointer"
                           }
                         },
-                        "id": 3891,
+                        "id": 4596,
                         "isConstant": false,
                         "isLValue": true,
                         "isPure": false,
                         "lValueRequested": false,
                         "memberName": "callData",
                         "nodeType": "MemberAccess",
-                        "referencedDeclaration": 3857,
-                        "src": "1164:13:20",
+                        "referencedDeclaration": 4562,
+                        "src": "1164:13:30",
                         "typeDescriptions": {
                           "typeIdentifier": "t_bytes_storage",
                           "typeString": "bytes storage ref"
@@ -1491,26 +1485,26 @@
                           "argumentTypes": null,
                           "expression": {
                             "argumentTypes": null,
-                            "id": 3887,
+                            "id": 4592,
                             "name": "self",
                             "nodeType": "Identifier",
                             "overloadedDeclarations": [],
-                            "referencedDeclaration": 3866,
-                            "src": "1150:4:20",
+                            "referencedDeclaration": 4571,
+                            "src": "1150:4:30",
                             "typeDescriptions": {
-                              "typeIdentifier": "t_struct$_ExecutionData_$3864_storage_ptr",
+                              "typeIdentifier": "t_struct$_ExecutionData_$4569_storage_ptr",
                               "typeString": "struct ExecutionLib.ExecutionData storage pointer"
                             }
                           },
-                          "id": 3888,
+                          "id": 4593,
                           "isConstant": false,
                           "isLValue": true,
                           "isPure": false,
                           "lValueRequested": false,
                           "memberName": "callGas",
                           "nodeType": "MemberAccess",
-                          "referencedDeclaration": 3861,
-                          "src": "1150:12:20",
+                          "referencedDeclaration": 4566,
+                          "src": "1150:12:30",
                           "typeDescriptions": {
                             "typeIdentifier": "t_uint256",
                             "typeString": "uint256"
@@ -1531,26 +1525,26 @@
                               "argumentTypes": null,
                               "expression": {
                                 "argumentTypes": null,
-                                "id": 3883,
+                                "id": 4588,
                                 "name": "self",
                                 "nodeType": "Identifier",
                                 "overloadedDeclarations": [],
-                                "referencedDeclaration": 3866,
-                                "src": "1130:4:20",
+                                "referencedDeclaration": 4571,
+                                "src": "1130:4:30",
                                 "typeDescriptions": {
-                                  "typeIdentifier": "t_struct$_ExecutionData_$3864_storage_ptr",
+                                  "typeIdentifier": "t_struct$_ExecutionData_$4569_storage_ptr",
                                   "typeString": "struct ExecutionLib.ExecutionData storage pointer"
                                 }
                               },
-                              "id": 3884,
+                              "id": 4589,
                               "isConstant": false,
                               "isLValue": true,
                               "isPure": false,
                               "lValueRequested": false,
                               "memberName": "callValue",
                               "nodeType": "MemberAccess",
-                              "referencedDeclaration": 3859,
-                              "src": "1130:14:20",
+                              "referencedDeclaration": 4564,
+                              "src": "1130:14:30",
                               "typeDescriptions": {
                                 "typeIdentifier": "t_uint256",
                                 "typeString": "uint256"
@@ -1570,32 +1564,32 @@
                                 "argumentTypes": null,
                                 "expression": {
                                   "argumentTypes": null,
-                                  "id": 3879,
+                                  "id": 4584,
                                   "name": "self",
                                   "nodeType": "Identifier",
                                   "overloadedDeclarations": [],
-                                  "referencedDeclaration": 3866,
-                                  "src": "1104:4:20",
+                                  "referencedDeclaration": 4571,
+                                  "src": "1104:4:30",
                                   "typeDescriptions": {
-                                    "typeIdentifier": "t_struct$_ExecutionData_$3864_storage_ptr",
+                                    "typeIdentifier": "t_struct$_ExecutionData_$4569_storage_ptr",
                                     "typeString": "struct ExecutionLib.ExecutionData storage pointer"
                                   }
                                 },
-                                "id": 3880,
+                                "id": 4585,
                                 "isConstant": false,
                                 "isLValue": true,
                                 "isPure": false,
                                 "lValueRequested": false,
                                 "memberName": "toAddress",
                                 "nodeType": "MemberAccess",
-                                "referencedDeclaration": 3855,
-                                "src": "1104:14:20",
+                                "referencedDeclaration": 4560,
+                                "src": "1104:14:30",
                                 "typeDescriptions": {
                                   "typeIdentifier": "t_address",
                                   "typeString": "address"
                                 }
                               },
-                              "id": 3881,
+                              "id": 4586,
                               "isConstant": false,
                               "isLValue": false,
                               "isPure": false,
@@ -1603,13 +1597,13 @@
                               "memberName": "call",
                               "nodeType": "MemberAccess",
                               "referencedDeclaration": null,
-                              "src": "1104:19:20",
+                              "src": "1104:19:30",
                               "typeDescriptions": {
                                 "typeIdentifier": "t_function_barecall_payable$__$returns$_t_bool_$",
                                 "typeString": "function () payable returns (bool)"
                               }
                             },
-                            "id": 3882,
+                            "id": 4587,
                             "isConstant": false,
                             "isLValue": false,
                             "isPure": false,
@@ -1617,13 +1611,13 @@
                             "memberName": "value",
                             "nodeType": "MemberAccess",
                             "referencedDeclaration": null,
-                            "src": "1104:25:20",
+                            "src": "1104:25:30",
                             "typeDescriptions": {
                               "typeIdentifier": "t_function_setvalue_nonpayable$_t_uint256_$returns$_t_function_barecall_payable$__$returns$_t_bool_$value_$",
                               "typeString": "function (uint256) returns (function () payable returns (bool))"
                             }
                           },
-                          "id": 3885,
+                          "id": 4590,
                           "isConstant": false,
                           "isLValue": false,
                           "isPure": false,
@@ -1631,13 +1625,13 @@
                           "lValueRequested": false,
                           "names": [],
                           "nodeType": "FunctionCall",
-                          "src": "1104:41:20",
+                          "src": "1104:41:30",
                           "typeDescriptions": {
                             "typeIdentifier": "t_function_barecall_payable$__$returns$_t_bool_$value",
                             "typeString": "function () payable returns (bool)"
                           }
                         },
-                        "id": 3886,
+                        "id": 4591,
                         "isConstant": false,
                         "isLValue": false,
                         "isPure": false,
@@ -1645,13 +1639,13 @@
                         "memberName": "gas",
                         "nodeType": "MemberAccess",
                         "referencedDeclaration": null,
-                        "src": "1104:45:20",
+                        "src": "1104:45:30",
                         "typeDescriptions": {
                           "typeIdentifier": "t_function_setgas_nonpayable$_t_uint256_$returns$_t_function_barecall_payable$__$returns$_t_bool_$gasvalue_$value",
                           "typeString": "function (uint256) returns (function () payable returns (bool))"
                         }
                       },
-                      "id": 3889,
+                      "id": 4594,
                       "isConstant": false,
                       "isLValue": false,
                       "isPure": false,
@@ -1659,13 +1653,13 @@
                       "lValueRequested": false,
                       "names": [],
                       "nodeType": "FunctionCall",
-                      "src": "1104:59:20",
+                      "src": "1104:59:30",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_barecall_payable$__$returns$_t_bool_$gasvalue",
                         "typeString": "function () payable returns (bool)"
                       }
                     },
-                    "id": 3892,
+                    "id": 4597,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
@@ -1673,21 +1667,21 @@
                     "lValueRequested": false,
                     "names": [],
                     "nodeType": "FunctionCall",
-                    "src": "1104:74:20",
+                    "src": "1104:74:30",
                     "typeDescriptions": {
                       "typeIdentifier": "t_bool",
                       "typeString": "bool"
                     }
                   },
-                  "functionReturnParameters": 3870,
-                  "id": 3893,
+                  "functionReturnParameters": 4575,
+                  "id": 4598,
                   "nodeType": "Return",
-                  "src": "1097:81:20"
+                  "src": "1097:81:30"
                 }
               ]
             },
             "documentation": "@dev Send the transaction according to the parameters outlined in ExecutionData.\n@param self The ExecutionData object.",
-            "id": 3895,
+            "id": 4600,
             "implemented": true,
             "isConstructor": false,
             "isDeclaredConst": false,
@@ -1695,52 +1689,52 @@
             "name": "sendTransaction",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 3867,
+              "id": 4572,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 3866,
+                  "id": 4571,
                   "name": "self",
                   "nodeType": "VariableDeclaration",
-                  "scope": 3895,
-                  "src": "846:26:20",
+                  "scope": 4600,
+                  "src": "846:26:30",
                   "stateVariable": false,
                   "storageLocation": "storage",
                   "typeDescriptions": {
-                    "typeIdentifier": "t_struct$_ExecutionData_$3864_storage_ptr",
-                    "typeString": "struct ExecutionLib.ExecutionData"
+                    "typeIdentifier": "t_struct$_ExecutionData_$4569_storage_ptr",
+                    "typeString": "struct ExecutionLib.ExecutionData storage pointer"
                   },
                   "typeName": {
                     "contractScope": null,
-                    "id": 3865,
+                    "id": 4570,
                     "name": "ExecutionData",
                     "nodeType": "UserDefinedTypeName",
-                    "referencedDeclaration": 3864,
-                    "src": "846:13:20",
+                    "referencedDeclaration": 4569,
+                    "src": "846:13:30",
                     "typeDescriptions": {
-                      "typeIdentifier": "t_struct$_ExecutionData_$3864_storage_ptr",
-                      "typeString": "struct ExecutionLib.ExecutionData"
+                      "typeIdentifier": "t_struct$_ExecutionData_$4569_storage_ptr",
+                      "typeString": "struct ExecutionLib.ExecutionData storage pointer"
                     }
                   },
                   "value": null,
                   "visibility": "internal"
                 }
               ],
-              "src": "845:28:20"
+              "src": "845:28:30"
             },
             "payable": false,
             "returnParameters": {
-              "id": 3870,
+              "id": 4575,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 3869,
+                  "id": 4574,
                   "name": "",
                   "nodeType": "VariableDeclaration",
-                  "scope": 3895,
-                  "src": "900:4:20",
+                  "scope": 4600,
+                  "src": "900:4:30",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -1748,10 +1742,10 @@
                     "typeString": "bool"
                   },
                   "typeName": {
-                    "id": 3868,
+                    "id": 4573,
                     "name": "bool",
                     "nodeType": "ElementaryTypeName",
-                    "src": "900:4:20",
+                    "src": "900:4:30",
                     "typeDescriptions": {
                       "typeIdentifier": "t_bool",
                       "typeString": "bool"
@@ -1761,19 +1755,19 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "899:6:20"
+              "src": "899:6:30"
             },
-            "scope": 3937,
-            "src": "821:364:20",
+            "scope": 4642,
+            "src": "821:364:30",
             "stateMutability": "nonpayable",
             "superFunction": null,
             "visibility": "internal"
           },
           {
             "body": {
-              "id": 3907,
+              "id": 4612,
               "nodeType": "Block",
-              "src": "1474:50:20",
+              "src": "1474:50:30",
               "statements": [
                 {
                   "expression": {
@@ -1782,7 +1776,7 @@
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
                     },
-                    "id": 3905,
+                    "id": 4610,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
@@ -1791,18 +1785,18 @@
                       "argumentTypes": null,
                       "expression": {
                         "argumentTypes": null,
-                        "id": 3902,
+                        "id": 4607,
                         "name": "block",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 6394,
-                        "src": "1491:5:20",
+                        "referencedDeclaration": 7321,
+                        "src": "1491:5:30",
                         "typeDescriptions": {
                           "typeIdentifier": "t_magic_block",
                           "typeString": "block"
                         }
                       },
-                      "id": 3903,
+                      "id": 4608,
                       "isConstant": false,
                       "isLValue": false,
                       "isPure": false,
@@ -1810,7 +1804,7 @@
                       "memberName": "gaslimit",
                       "nodeType": "MemberAccess",
                       "referencedDeclaration": null,
-                      "src": "1491:14:20",
+                      "src": "1491:14:30",
                       "typeDescriptions": {
                         "typeIdentifier": "t_uint256",
                         "typeString": "uint256"
@@ -1820,32 +1814,32 @@
                     "operator": "-",
                     "rightExpression": {
                       "argumentTypes": null,
-                      "id": 3904,
+                      "id": 4609,
                       "name": "EXTRA_GAS",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [],
-                      "referencedDeclaration": 3897,
-                      "src": "1508:9:20",
+                      "referencedDeclaration": 4602,
+                      "src": "1508:9:30",
                       "typeDescriptions": {
                         "typeIdentifier": "t_uint256",
                         "typeString": "uint256"
                       }
                     },
-                    "src": "1491:26:20",
+                    "src": "1491:26:30",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
                     }
                   },
-                  "functionReturnParameters": 3901,
-                  "id": 3906,
+                  "functionReturnParameters": 4606,
+                  "id": 4611,
                   "nodeType": "Return",
-                  "src": "1484:33:20"
+                  "src": "1484:33:30"
                 }
               ]
             },
             "documentation": "Returns the maximum possible gas consumption that a transaction request\nmay consume.  The EXTRA_GAS value represents the overhead involved in\nrequest execution.",
-            "id": 3908,
+            "id": 4613,
             "implemented": true,
             "isConstructor": false,
             "isDeclaredConst": true,
@@ -1853,16 +1847,16 @@
             "name": "CALL_GAS_CEILING",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 3898,
+              "id": 4603,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 3897,
+                  "id": 4602,
                   "name": "EXTRA_GAS",
                   "nodeType": "VariableDeclaration",
-                  "scope": 3908,
-                  "src": "1416:14:20",
+                  "scope": 4613,
+                  "src": "1416:14:30",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -1870,10 +1864,10 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 3896,
+                    "id": 4601,
                     "name": "uint",
                     "nodeType": "ElementaryTypeName",
-                    "src": "1416:4:20",
+                    "src": "1416:4:30",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
@@ -1883,20 +1877,20 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "1415:16:20"
+              "src": "1415:16:30"
             },
             "payable": false,
             "returnParameters": {
-              "id": 3901,
+              "id": 4606,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 3900,
+                  "id": 4605,
                   "name": "",
                   "nodeType": "VariableDeclaration",
-                  "scope": 3908,
-                  "src": "1464:4:20",
+                  "scope": 4613,
+                  "src": "1464:4:30",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -1904,10 +1898,10 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 3899,
+                    "id": 4604,
                     "name": "uint",
                     "nodeType": "ElementaryTypeName",
-                    "src": "1464:4:20",
+                    "src": "1464:4:30",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
@@ -1917,19 +1911,19 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "1463:6:20"
+              "src": "1463:6:30"
             },
-            "scope": 3937,
-            "src": "1390:134:20",
+            "scope": 4642,
+            "src": "1390:134:30",
             "stateMutability": "view",
             "superFunction": null,
             "visibility": "internal"
           },
           {
             "body": {
-              "id": 3923,
+              "id": 4628,
               "nodeType": "Block",
-              "src": "1744:61:20",
+              "src": "1744:61:30",
               "statements": [
                 {
                   "expression": {
@@ -1938,19 +1932,19 @@
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
                     },
-                    "id": 3921,
+                    "id": 4626,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
                     "lValueRequested": false,
                     "leftExpression": {
                       "argumentTypes": null,
-                      "id": 3917,
+                      "id": 4622,
                       "name": "callGas",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [],
-                      "referencedDeclaration": 3910,
-                      "src": "1761:7:20",
+                      "referencedDeclaration": 4615,
+                      "src": "1761:7:30",
                       "typeDescriptions": {
                         "typeIdentifier": "t_uint256",
                         "typeString": "uint256"
@@ -1963,12 +1957,12 @@
                       "arguments": [
                         {
                           "argumentTypes": null,
-                          "id": 3919,
+                          "id": 4624,
                           "name": "EXTRA_GAS",
                           "nodeType": "Identifier",
                           "overloadedDeclarations": [],
-                          "referencedDeclaration": 3912,
-                          "src": "1788:9:20",
+                          "referencedDeclaration": 4617,
+                          "src": "1788:9:30",
                           "typeDescriptions": {
                             "typeIdentifier": "t_uint256",
                             "typeString": "uint256"
@@ -1982,18 +1976,18 @@
                             "typeString": "uint256"
                           }
                         ],
-                        "id": 3918,
+                        "id": 4623,
                         "name": "CALL_GAS_CEILING",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 3908,
-                        "src": "1771:16:20",
+                        "referencedDeclaration": 4613,
+                        "src": "1771:16:30",
                         "typeDescriptions": {
                           "typeIdentifier": "t_function_internal_view$_t_uint256_$returns$_t_uint256_$",
                           "typeString": "function (uint256) view returns (uint256)"
                         }
                       },
-                      "id": 3920,
+                      "id": 4625,
                       "isConstant": false,
                       "isLValue": false,
                       "isPure": false,
@@ -2001,27 +1995,27 @@
                       "lValueRequested": false,
                       "names": [],
                       "nodeType": "FunctionCall",
-                      "src": "1771:27:20",
+                      "src": "1771:27:30",
                       "typeDescriptions": {
                         "typeIdentifier": "t_uint256",
                         "typeString": "uint256"
                       }
                     },
-                    "src": "1761:37:20",
+                    "src": "1761:37:30",
                     "typeDescriptions": {
                       "typeIdentifier": "t_bool",
                       "typeString": "bool"
                     }
                   },
-                  "functionReturnParameters": 3916,
-                  "id": 3922,
+                  "functionReturnParameters": 4621,
+                  "id": 4627,
                   "nodeType": "Return",
-                  "src": "1754:44:20"
+                  "src": "1754:44:30"
                 }
               ]
             },
             "documentation": null,
-            "id": 3924,
+            "id": 4629,
             "implemented": true,
             "isConstructor": false,
             "isDeclaredConst": true,
@@ -2029,16 +2023,16 @@
             "name": "validateCallGas",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 3913,
+              "id": 4618,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 3910,
+                  "id": 4615,
                   "name": "callGas",
                   "nodeType": "VariableDeclaration",
-                  "scope": 3924,
-                  "src": "1673:12:20",
+                  "scope": 4629,
+                  "src": "1673:12:30",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -2046,10 +2040,10 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 3909,
+                    "id": 4614,
                     "name": "uint",
                     "nodeType": "ElementaryTypeName",
-                    "src": "1673:4:20",
+                    "src": "1673:4:30",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
@@ -2060,11 +2054,11 @@
                 },
                 {
                   "constant": false,
-                  "id": 3912,
+                  "id": 4617,
                   "name": "EXTRA_GAS",
                   "nodeType": "VariableDeclaration",
-                  "scope": 3924,
-                  "src": "1687:14:20",
+                  "scope": 4629,
+                  "src": "1687:14:30",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -2072,10 +2066,10 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 3911,
+                    "id": 4616,
                     "name": "uint",
                     "nodeType": "ElementaryTypeName",
-                    "src": "1687:4:20",
+                    "src": "1687:4:30",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
@@ -2085,20 +2079,20 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "1672:30:20"
+              "src": "1672:30:30"
             },
             "payable": false,
             "returnParameters": {
-              "id": 3916,
+              "id": 4621,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 3915,
+                  "id": 4620,
                   "name": "",
                   "nodeType": "VariableDeclaration",
-                  "scope": 3924,
-                  "src": "1734:4:20",
+                  "scope": 4629,
+                  "src": "1734:4:30",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -2106,10 +2100,10 @@
                     "typeString": "bool"
                   },
                   "typeName": {
-                    "id": 3914,
+                    "id": 4619,
                     "name": "bool",
                     "nodeType": "ElementaryTypeName",
-                    "src": "1734:4:20",
+                    "src": "1734:4:30",
                     "typeDescriptions": {
                       "typeIdentifier": "t_bool",
                       "typeString": "bool"
@@ -2119,19 +2113,19 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "1733:6:20"
+              "src": "1733:6:30"
             },
-            "scope": 3937,
-            "src": "1648:157:20",
+            "scope": 4642,
+            "src": "1648:157:30",
             "stateMutability": "view",
             "superFunction": null,
             "visibility": "internal"
           },
           {
             "body": {
-              "id": 3935,
+              "id": 4640,
               "nodeType": "Block",
-              "src": "1996:40:20",
+              "src": "1996:40:30",
               "statements": [
                 {
                   "expression": {
@@ -2140,19 +2134,19 @@
                       "typeIdentifier": "t_address",
                       "typeString": "address"
                     },
-                    "id": 3933,
+                    "id": 4638,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
                     "lValueRequested": false,
                     "leftExpression": {
                       "argumentTypes": null,
-                      "id": 3931,
+                      "id": 4636,
                       "name": "toAddress",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [],
-                      "referencedDeclaration": 3926,
-                      "src": "2013:9:20",
+                      "referencedDeclaration": 4631,
+                      "src": "2013:9:30",
                       "typeDescriptions": {
                         "typeIdentifier": "t_address",
                         "typeString": "address"
@@ -2163,14 +2157,14 @@
                     "rightExpression": {
                       "argumentTypes": null,
                       "hexValue": "307830",
-                      "id": 3932,
+                      "id": 4637,
                       "isConstant": false,
                       "isLValue": false,
                       "isPure": true,
                       "kind": "number",
                       "lValueRequested": false,
                       "nodeType": "Literal",
-                      "src": "2026:3:20",
+                      "src": "2026:3:30",
                       "subdenomination": null,
                       "typeDescriptions": {
                         "typeIdentifier": "t_rational_0_by_1",
@@ -2178,21 +2172,21 @@
                       },
                       "value": "0x0"
                     },
-                    "src": "2013:16:20",
+                    "src": "2013:16:30",
                     "typeDescriptions": {
                       "typeIdentifier": "t_bool",
                       "typeString": "bool"
                     }
                   },
-                  "functionReturnParameters": 3930,
-                  "id": 3934,
+                  "functionReturnParameters": 4635,
+                  "id": 4639,
                   "nodeType": "Return",
-                  "src": "2006:23:20"
+                  "src": "2006:23:30"
                 }
               ]
             },
             "documentation": null,
-            "id": 3936,
+            "id": 4641,
             "implemented": true,
             "isConstructor": false,
             "isDeclaredConst": true,
@@ -2200,16 +2194,16 @@
             "name": "validateToAddress",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 3927,
+              "id": 4632,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 3926,
+                  "id": 4631,
                   "name": "toAddress",
                   "nodeType": "VariableDeclaration",
-                  "scope": 3936,
-                  "src": "1936:17:20",
+                  "scope": 4641,
+                  "src": "1936:17:30",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -2217,10 +2211,10 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 3925,
+                    "id": 4630,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
-                    "src": "1936:7:20",
+                    "src": "1936:7:30",
                     "typeDescriptions": {
                       "typeIdentifier": "t_address",
                       "typeString": "address"
@@ -2230,20 +2224,20 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "1935:19:20"
+              "src": "1935:19:30"
             },
             "payable": false,
             "returnParameters": {
-              "id": 3930,
+              "id": 4635,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 3929,
+                  "id": 4634,
                   "name": "",
                   "nodeType": "VariableDeclaration",
-                  "scope": 3936,
-                  "src": "1986:4:20",
+                  "scope": 4641,
+                  "src": "1986:4:30",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -2251,10 +2245,10 @@
                     "typeString": "bool"
                   },
                   "typeName": {
-                    "id": 3928,
+                    "id": 4633,
                     "name": "bool",
                     "nodeType": "ElementaryTypeName",
-                    "src": "1986:4:20",
+                    "src": "1986:4:30",
                     "typeDescriptions": {
                       "typeIdentifier": "t_bool",
                       "typeString": "bool"
@@ -2264,26 +2258,32 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "1985:6:20"
+              "src": "1985:6:30"
             },
-            "scope": 3937,
-            "src": "1909:127:20",
+            "scope": 4642,
+            "src": "1909:127:30",
             "stateMutability": "pure",
             "superFunction": null,
             "visibility": "internal"
           }
         ],
-        "scope": 3938,
-        "src": "123:1915:20"
+        "scope": 4643,
+        "src": "123:1915:30"
       }
     ],
-    "src": "0:2039:20"
+    "src": "0:2039:30"
   },
   "compiler": {
     "name": "solc",
-    "version": "0.4.23+commit.124ca40d.Emscripten.clang"
+    "version": "0.4.21+commit.dfe3193c.Emscripten.clang"
   },
   "networks": {
+    "3": {
+      "events": {},
+      "links": {},
+      "address": "0xfc7c1a36179705992e0be3def88de31b70a124b5",
+      "transactionHash": "0x1a529b81030b2cdc1eab8f0aa32314c8124599266df4b0bf9a0be21acf6b54a5"
+    },
     "42": {
       "events": {},
       "links": {},
@@ -2292,5 +2292,5 @@
     }
   },
   "schemaVersion": "2.0.0",
-  "updatedAt": "2018-04-24T07:01:29.898Z"
+  "updatedAt": "2018-05-21T17:42:15.827Z"
 }

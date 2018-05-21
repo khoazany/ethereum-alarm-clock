@@ -1,24 +1,24 @@
 {
   "contractName": "ClaimLib",
   "abi": [],
-  "bytecode": "0x604c602c600b82828239805160001a60731460008114601c57601e565bfe5b5030600052607381538281f30073000000000000000000000000000000000000000030146080604052600080fd00a165627a7a723058205ca61184bb5b381841692beee0fef8637c8caf85b8623ff1dbb0dda4ade6ff460029",
-  "deployedBytecode": "0x73000000000000000000000000000000000000000030146080604052600080fd00a165627a7a723058205ca61184bb5b381841692beee0fef8637c8caf85b8623ff1dbb0dda4ade6ff460029",
-  "sourceMap": "69:1764:19:-;;132:2:-1;166:7;155:9;146:7;137:37;252:7;246:14;243:1;238:23;232:4;229:33;270:1;265:20;;;;222:63;;265:20;274:9;222:63;;298:9;295:1;288:20;328:4;319:7;311:22;352:7;343;336:24",
-  "deployedSourceMap": "69:1764:19:-;;;;;;;;",
+  "bytecode": "0x604c602c600b82828239805160001a60731460008114601c57601e565bfe5b5030600052607381538281f30073000000000000000000000000000000000000000030146060604052600080fd00a165627a7a723058206c5b6003f98f5a41a348e89a1e5a5d60425719faa808d979c9cec73ae9adda1b0029",
+  "deployedBytecode": "0x73000000000000000000000000000000000000000030146060604052600080fd00a165627a7a723058206c5b6003f98f5a41a348e89a1e5a5d60425719faa808d979c9cec73ae9adda1b0029",
+  "sourceMap": "69:1764:29:-;;132:2:-1;166:7;155:9;146:7;137:37;252:7;246:14;243:1;238:23;232:4;229:33;270:1;265:20;;;;222:63;;265:20;274:9;222:63;;298:9;295:1;288:20;328:4;319:7;311:22;352:7;343;336:24",
+  "deployedSourceMap": "69:1764:29:-;;;;;;;;",
   "source": "pragma solidity ^0.4.21;\n\nimport \"contracts/zeppelin/SafeMath.sol\";\n\nlibrary ClaimLib {\n    using SafeMath for uint;\n\n    struct ClaimData {\n        address claimedBy;          // The address that has claimed the txRequest.\n        uint claimDeposit;          // The deposit amount that was put down by the claimer.\n        uint requiredDeposit;       // The required deposit to claim the txRequest.\n        uint8 paymentModifier;      // An integer constrained between 0-100 that will be applied to the\n                                    // request payment as a percentage.\n    }\n\n    /*\n     * @dev Mark the request as being claimed.\n     * @param self The ClaimData that is being accessed.\n     * @param paymentModifier The payment modifier.\n     */\n    function claim(\n        ClaimData storage self, \n        uint8 _paymentModifier\n    ) \n        internal returns (bool)\n    {\n        self.claimedBy = msg.sender;\n        self.claimDeposit = msg.value;\n        self.paymentModifier = _paymentModifier;\n    }\n\n    /*\n     * Helper: returns whether this request is claimed.\n     */\n    function isClaimed(ClaimData storage self) \n        internal view returns (bool)\n    {\n        return self.claimedBy != 0x0;\n    }\n\n\n    /*\n     * @dev Refund the claim deposit to claimer.\n     * @param self The Request.ClaimData\n     * Called in RequestLib's `cancel()` and `refundClaimDeposit()`\n     */\n    function refundDeposit(ClaimData storage self) \n        internal returns (bool)\n    {\n        // Check that the claim deposit is non-zero.\n        if (self.claimDeposit > 0) {\n            uint depositAmount;\n            depositAmount = self.claimDeposit;\n            self.claimDeposit = 0;\n            /* solium-disable security/no-send */\n            return self.claimedBy.send(depositAmount);\n        }\n        return true;\n    }\n}",
   "sourcePath": "contracts/Library/ClaimLib.sol",
   "ast": {
     "absolutePath": "contracts/Library/ClaimLib.sol",
     "exportedSymbols": {
       "ClaimLib": [
-        3851
+        4556
       ]
     },
-    "id": 3852,
+    "id": 4557,
     "nodeType": "SourceUnit",
     "nodes": [
       {
-        "id": 3758,
+        "id": 4463,
         "literals": [
           "solidity",
           "^",
@@ -26,16 +26,16 @@
           ".21"
         ],
         "nodeType": "PragmaDirective",
-        "src": "0:24:19"
+        "src": "0:24:29"
       },
       {
         "absolutePath": "contracts/zeppelin/SafeMath.sol",
         "file": "contracts/zeppelin/SafeMath.sol",
-        "id": 3759,
+        "id": 4464,
         "nodeType": "ImportDirective",
-        "scope": 3852,
-        "sourceUnit": 6390,
-        "src": "26:41:19",
+        "scope": 4557,
+        "sourceUnit": 7318,
+        "src": "26:41:29",
         "symbolAliases": [],
         "unitAlias": ""
       },
@@ -45,34 +45,34 @@
         "contractKind": "library",
         "documentation": null,
         "fullyImplemented": true,
-        "id": 3851,
+        "id": 4556,
         "linearizedBaseContracts": [
-          3851
+          4556
         ],
         "name": "ClaimLib",
         "nodeType": "ContractDefinition",
         "nodes": [
           {
-            "id": 3762,
+            "id": 4467,
             "libraryName": {
               "contractScope": null,
-              "id": 3760,
+              "id": 4465,
               "name": "SafeMath",
               "nodeType": "UserDefinedTypeName",
-              "referencedDeclaration": 6389,
-              "src": "98:8:19",
+              "referencedDeclaration": 7317,
+              "src": "98:8:29",
               "typeDescriptions": {
-                "typeIdentifier": "t_contract$_SafeMath_$6389",
+                "typeIdentifier": "t_contract$_SafeMath_$7317",
                 "typeString": "library SafeMath"
               }
             },
             "nodeType": "UsingForDirective",
-            "src": "92:24:19",
+            "src": "92:24:29",
             "typeName": {
-              "id": 3761,
+              "id": 4466,
               "name": "uint",
               "nodeType": "ElementaryTypeName",
-              "src": "111:4:19",
+              "src": "111:4:29",
               "typeDescriptions": {
                 "typeIdentifier": "t_uint256",
                 "typeString": "uint256"
@@ -81,15 +81,15 @@
           },
           {
             "canonicalName": "ClaimLib.ClaimData",
-            "id": 3771,
+            "id": 4476,
             "members": [
               {
                 "constant": false,
-                "id": 3764,
+                "id": 4469,
                 "name": "claimedBy",
                 "nodeType": "VariableDeclaration",
-                "scope": 3771,
-                "src": "149:17:19",
+                "scope": 4476,
+                "src": "149:17:29",
                 "stateVariable": false,
                 "storageLocation": "default",
                 "typeDescriptions": {
@@ -97,10 +97,10 @@
                   "typeString": "address"
                 },
                 "typeName": {
-                  "id": 3763,
+                  "id": 4468,
                   "name": "address",
                   "nodeType": "ElementaryTypeName",
-                  "src": "149:7:19",
+                  "src": "149:7:29",
                   "typeDescriptions": {
                     "typeIdentifier": "t_address",
                     "typeString": "address"
@@ -111,11 +111,11 @@
               },
               {
                 "constant": false,
-                "id": 3766,
+                "id": 4471,
                 "name": "claimDeposit",
                 "nodeType": "VariableDeclaration",
-                "scope": 3771,
-                "src": "232:17:19",
+                "scope": 4476,
+                "src": "232:17:29",
                 "stateVariable": false,
                 "storageLocation": "default",
                 "typeDescriptions": {
@@ -123,10 +123,10 @@
                   "typeString": "uint256"
                 },
                 "typeName": {
-                  "id": 3765,
+                  "id": 4470,
                   "name": "uint",
                   "nodeType": "ElementaryTypeName",
-                  "src": "232:4:19",
+                  "src": "232:4:29",
                   "typeDescriptions": {
                     "typeIdentifier": "t_uint256",
                     "typeString": "uint256"
@@ -137,11 +137,11 @@
               },
               {
                 "constant": false,
-                "id": 3768,
+                "id": 4473,
                 "name": "requiredDeposit",
                 "nodeType": "VariableDeclaration",
-                "scope": 3771,
-                "src": "324:20:19",
+                "scope": 4476,
+                "src": "324:20:29",
                 "stateVariable": false,
                 "storageLocation": "default",
                 "typeDescriptions": {
@@ -149,10 +149,10 @@
                   "typeString": "uint256"
                 },
                 "typeName": {
-                  "id": 3767,
+                  "id": 4472,
                   "name": "uint",
                   "nodeType": "ElementaryTypeName",
-                  "src": "324:4:19",
+                  "src": "324:4:29",
                   "typeDescriptions": {
                     "typeIdentifier": "t_uint256",
                     "typeString": "uint256"
@@ -163,11 +163,11 @@
               },
               {
                 "constant": false,
-                "id": 3770,
+                "id": 4475,
                 "name": "paymentModifier",
                 "nodeType": "VariableDeclaration",
-                "scope": 3771,
-                "src": "408:21:19",
+                "scope": 4476,
+                "src": "408:21:29",
                 "stateVariable": false,
                 "storageLocation": "default",
                 "typeDescriptions": {
@@ -175,10 +175,10 @@
                   "typeString": "uint8"
                 },
                 "typeName": {
-                  "id": 3769,
+                  "id": 4474,
                   "name": "uint8",
                   "nodeType": "ElementaryTypeName",
-                  "src": "408:5:19",
+                  "src": "408:5:29",
                   "typeDescriptions": {
                     "typeIdentifier": "t_uint8",
                     "typeString": "uint8"
@@ -190,20 +190,20 @@
             ],
             "name": "ClaimData",
             "nodeType": "StructDefinition",
-            "scope": 3851,
-            "src": "122:459:19",
+            "scope": 4556,
+            "src": "122:459:29",
             "visibility": "public"
           },
           {
             "body": {
-              "id": 3800,
+              "id": 4505,
               "nodeType": "Block",
-              "src": "881:132:19",
+              "src": "881:132:29",
               "statements": [
                 {
                   "expression": {
                     "argumentTypes": null,
-                    "id": 3785,
+                    "id": 4490,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
@@ -212,26 +212,26 @@
                       "argumentTypes": null,
                       "expression": {
                         "argumentTypes": null,
-                        "id": 3780,
+                        "id": 4485,
                         "name": "self",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 3773,
-                        "src": "891:4:19",
+                        "referencedDeclaration": 4478,
+                        "src": "891:4:29",
                         "typeDescriptions": {
-                          "typeIdentifier": "t_struct$_ClaimData_$3771_storage_ptr",
+                          "typeIdentifier": "t_struct$_ClaimData_$4476_storage_ptr",
                           "typeString": "struct ClaimLib.ClaimData storage pointer"
                         }
                       },
-                      "id": 3782,
+                      "id": 4487,
                       "isConstant": false,
                       "isLValue": true,
                       "isPure": false,
                       "lValueRequested": true,
                       "memberName": "claimedBy",
                       "nodeType": "MemberAccess",
-                      "referencedDeclaration": 3764,
-                      "src": "891:14:19",
+                      "referencedDeclaration": 4469,
+                      "src": "891:14:29",
                       "typeDescriptions": {
                         "typeIdentifier": "t_address",
                         "typeString": "address"
@@ -243,18 +243,18 @@
                       "argumentTypes": null,
                       "expression": {
                         "argumentTypes": null,
-                        "id": 3783,
+                        "id": 4488,
                         "name": "msg",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 6404,
-                        "src": "908:3:19",
+                        "referencedDeclaration": 7330,
+                        "src": "908:3:29",
                         "typeDescriptions": {
                           "typeIdentifier": "t_magic_message",
                           "typeString": "msg"
                         }
                       },
-                      "id": 3784,
+                      "id": 4489,
                       "isConstant": false,
                       "isLValue": false,
                       "isPure": false,
@@ -262,26 +262,26 @@
                       "memberName": "sender",
                       "nodeType": "MemberAccess",
                       "referencedDeclaration": null,
-                      "src": "908:10:19",
+                      "src": "908:10:29",
                       "typeDescriptions": {
                         "typeIdentifier": "t_address",
                         "typeString": "address"
                       }
                     },
-                    "src": "891:27:19",
+                    "src": "891:27:29",
                     "typeDescriptions": {
                       "typeIdentifier": "t_address",
                       "typeString": "address"
                     }
                   },
-                  "id": 3786,
+                  "id": 4491,
                   "nodeType": "ExpressionStatement",
-                  "src": "891:27:19"
+                  "src": "891:27:29"
                 },
                 {
                   "expression": {
                     "argumentTypes": null,
-                    "id": 3792,
+                    "id": 4497,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
@@ -290,26 +290,26 @@
                       "argumentTypes": null,
                       "expression": {
                         "argumentTypes": null,
-                        "id": 3787,
+                        "id": 4492,
                         "name": "self",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 3773,
-                        "src": "928:4:19",
+                        "referencedDeclaration": 4478,
+                        "src": "928:4:29",
                         "typeDescriptions": {
-                          "typeIdentifier": "t_struct$_ClaimData_$3771_storage_ptr",
+                          "typeIdentifier": "t_struct$_ClaimData_$4476_storage_ptr",
                           "typeString": "struct ClaimLib.ClaimData storage pointer"
                         }
                       },
-                      "id": 3789,
+                      "id": 4494,
                       "isConstant": false,
                       "isLValue": true,
                       "isPure": false,
                       "lValueRequested": true,
                       "memberName": "claimDeposit",
                       "nodeType": "MemberAccess",
-                      "referencedDeclaration": 3766,
-                      "src": "928:17:19",
+                      "referencedDeclaration": 4471,
+                      "src": "928:17:29",
                       "typeDescriptions": {
                         "typeIdentifier": "t_uint256",
                         "typeString": "uint256"
@@ -321,18 +321,18 @@
                       "argumentTypes": null,
                       "expression": {
                         "argumentTypes": null,
-                        "id": 3790,
+                        "id": 4495,
                         "name": "msg",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 6404,
-                        "src": "948:3:19",
+                        "referencedDeclaration": 7330,
+                        "src": "948:3:29",
                         "typeDescriptions": {
                           "typeIdentifier": "t_magic_message",
                           "typeString": "msg"
                         }
                       },
-                      "id": 3791,
+                      "id": 4496,
                       "isConstant": false,
                       "isLValue": false,
                       "isPure": false,
@@ -340,26 +340,26 @@
                       "memberName": "value",
                       "nodeType": "MemberAccess",
                       "referencedDeclaration": null,
-                      "src": "948:9:19",
+                      "src": "948:9:29",
                       "typeDescriptions": {
                         "typeIdentifier": "t_uint256",
                         "typeString": "uint256"
                       }
                     },
-                    "src": "928:29:19",
+                    "src": "928:29:29",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
                     }
                   },
-                  "id": 3793,
+                  "id": 4498,
                   "nodeType": "ExpressionStatement",
-                  "src": "928:29:19"
+                  "src": "928:29:29"
                 },
                 {
                   "expression": {
                     "argumentTypes": null,
-                    "id": 3798,
+                    "id": 4503,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
@@ -368,26 +368,26 @@
                       "argumentTypes": null,
                       "expression": {
                         "argumentTypes": null,
-                        "id": 3794,
+                        "id": 4499,
                         "name": "self",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 3773,
-                        "src": "967:4:19",
+                        "referencedDeclaration": 4478,
+                        "src": "967:4:29",
                         "typeDescriptions": {
-                          "typeIdentifier": "t_struct$_ClaimData_$3771_storage_ptr",
+                          "typeIdentifier": "t_struct$_ClaimData_$4476_storage_ptr",
                           "typeString": "struct ClaimLib.ClaimData storage pointer"
                         }
                       },
-                      "id": 3796,
+                      "id": 4501,
                       "isConstant": false,
                       "isLValue": true,
                       "isPure": false,
                       "lValueRequested": true,
                       "memberName": "paymentModifier",
                       "nodeType": "MemberAccess",
-                      "referencedDeclaration": 3770,
-                      "src": "967:20:19",
+                      "referencedDeclaration": 4475,
+                      "src": "967:20:29",
                       "typeDescriptions": {
                         "typeIdentifier": "t_uint8",
                         "typeString": "uint8"
@@ -397,31 +397,31 @@
                     "operator": "=",
                     "rightHandSide": {
                       "argumentTypes": null,
-                      "id": 3797,
+                      "id": 4502,
                       "name": "_paymentModifier",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [],
-                      "referencedDeclaration": 3775,
-                      "src": "990:16:19",
+                      "referencedDeclaration": 4480,
+                      "src": "990:16:29",
                       "typeDescriptions": {
                         "typeIdentifier": "t_uint8",
                         "typeString": "uint8"
                       }
                     },
-                    "src": "967:39:19",
+                    "src": "967:39:29",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint8",
                       "typeString": "uint8"
                     }
                   },
-                  "id": 3799,
+                  "id": 4504,
                   "nodeType": "ExpressionStatement",
-                  "src": "967:39:19"
+                  "src": "967:39:29"
                 }
               ]
             },
             "documentation": null,
-            "id": 3801,
+            "id": 4506,
             "implemented": true,
             "isConstructor": false,
             "isDeclaredConst": false,
@@ -429,32 +429,32 @@
             "name": "claim",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 3776,
+              "id": 4481,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 3773,
+                  "id": 4478,
                   "name": "self",
                   "nodeType": "VariableDeclaration",
-                  "scope": 3801,
-                  "src": "782:22:19",
+                  "scope": 4506,
+                  "src": "782:22:29",
                   "stateVariable": false,
                   "storageLocation": "storage",
                   "typeDescriptions": {
-                    "typeIdentifier": "t_struct$_ClaimData_$3771_storage_ptr",
-                    "typeString": "struct ClaimLib.ClaimData"
+                    "typeIdentifier": "t_struct$_ClaimData_$4476_storage_ptr",
+                    "typeString": "struct ClaimLib.ClaimData storage pointer"
                   },
                   "typeName": {
                     "contractScope": null,
-                    "id": 3772,
+                    "id": 4477,
                     "name": "ClaimData",
                     "nodeType": "UserDefinedTypeName",
-                    "referencedDeclaration": 3771,
-                    "src": "782:9:19",
+                    "referencedDeclaration": 4476,
+                    "src": "782:9:29",
                     "typeDescriptions": {
-                      "typeIdentifier": "t_struct$_ClaimData_$3771_storage_ptr",
-                      "typeString": "struct ClaimLib.ClaimData"
+                      "typeIdentifier": "t_struct$_ClaimData_$4476_storage_ptr",
+                      "typeString": "struct ClaimLib.ClaimData storage pointer"
                     }
                   },
                   "value": null,
@@ -462,11 +462,11 @@
                 },
                 {
                   "constant": false,
-                  "id": 3775,
+                  "id": 4480,
                   "name": "_paymentModifier",
                   "nodeType": "VariableDeclaration",
-                  "scope": 3801,
-                  "src": "815:22:19",
+                  "scope": 4506,
+                  "src": "815:22:29",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -474,10 +474,10 @@
                     "typeString": "uint8"
                   },
                   "typeName": {
-                    "id": 3774,
+                    "id": 4479,
                     "name": "uint8",
                     "nodeType": "ElementaryTypeName",
-                    "src": "815:5:19",
+                    "src": "815:5:29",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint8",
                       "typeString": "uint8"
@@ -487,20 +487,20 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "772:71:19"
+              "src": "772:71:29"
             },
             "payable": false,
             "returnParameters": {
-              "id": 3779,
+              "id": 4484,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 3778,
+                  "id": 4483,
                   "name": "",
                   "nodeType": "VariableDeclaration",
-                  "scope": 3801,
-                  "src": "871:4:19",
+                  "scope": 4506,
+                  "src": "871:4:29",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -508,10 +508,10 @@
                     "typeString": "bool"
                   },
                   "typeName": {
-                    "id": 3777,
+                    "id": 4482,
                     "name": "bool",
                     "nodeType": "ElementaryTypeName",
-                    "src": "871:4:19",
+                    "src": "871:4:29",
                     "typeDescriptions": {
                       "typeIdentifier": "t_bool",
                       "typeString": "bool"
@@ -521,19 +521,19 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "870:6:19"
+              "src": "870:6:29"
             },
-            "scope": 3851,
-            "src": "758:255:19",
+            "scope": 4556,
+            "src": "758:255:29",
             "stateMutability": "nonpayable",
             "superFunction": null,
             "visibility": "internal"
           },
           {
             "body": {
-              "id": 3813,
+              "id": 4518,
               "nodeType": "Block",
-              "src": "1175:45:19",
+              "src": "1175:45:29",
               "statements": [
                 {
                   "expression": {
@@ -542,7 +542,7 @@
                       "typeIdentifier": "t_address",
                       "typeString": "address"
                     },
-                    "id": 3811,
+                    "id": 4516,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
@@ -551,26 +551,26 @@
                       "argumentTypes": null,
                       "expression": {
                         "argumentTypes": null,
-                        "id": 3808,
+                        "id": 4513,
                         "name": "self",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 3803,
-                        "src": "1192:4:19",
+                        "referencedDeclaration": 4508,
+                        "src": "1192:4:29",
                         "typeDescriptions": {
-                          "typeIdentifier": "t_struct$_ClaimData_$3771_storage_ptr",
+                          "typeIdentifier": "t_struct$_ClaimData_$4476_storage_ptr",
                           "typeString": "struct ClaimLib.ClaimData storage pointer"
                         }
                       },
-                      "id": 3809,
+                      "id": 4514,
                       "isConstant": false,
                       "isLValue": true,
                       "isPure": false,
                       "lValueRequested": false,
                       "memberName": "claimedBy",
                       "nodeType": "MemberAccess",
-                      "referencedDeclaration": 3764,
-                      "src": "1192:14:19",
+                      "referencedDeclaration": 4469,
+                      "src": "1192:14:29",
                       "typeDescriptions": {
                         "typeIdentifier": "t_address",
                         "typeString": "address"
@@ -581,14 +581,14 @@
                     "rightExpression": {
                       "argumentTypes": null,
                       "hexValue": "307830",
-                      "id": 3810,
+                      "id": 4515,
                       "isConstant": false,
                       "isLValue": false,
                       "isPure": true,
                       "kind": "number",
                       "lValueRequested": false,
                       "nodeType": "Literal",
-                      "src": "1210:3:19",
+                      "src": "1210:3:29",
                       "subdenomination": null,
                       "typeDescriptions": {
                         "typeIdentifier": "t_rational_0_by_1",
@@ -596,21 +596,21 @@
                       },
                       "value": "0x0"
                     },
-                    "src": "1192:21:19",
+                    "src": "1192:21:29",
                     "typeDescriptions": {
                       "typeIdentifier": "t_bool",
                       "typeString": "bool"
                     }
                   },
-                  "functionReturnParameters": 3807,
-                  "id": 3812,
+                  "functionReturnParameters": 4512,
+                  "id": 4517,
                   "nodeType": "Return",
-                  "src": "1185:28:19"
+                  "src": "1185:28:29"
                 }
               ]
             },
             "documentation": null,
-            "id": 3814,
+            "id": 4519,
             "implemented": true,
             "isConstructor": false,
             "isDeclaredConst": true,
@@ -618,52 +618,52 @@
             "name": "isClaimed",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 3804,
+              "id": 4509,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 3803,
+                  "id": 4508,
                   "name": "self",
                   "nodeType": "VariableDeclaration",
-                  "scope": 3814,
-                  "src": "1109:22:19",
+                  "scope": 4519,
+                  "src": "1109:22:29",
                   "stateVariable": false,
                   "storageLocation": "storage",
                   "typeDescriptions": {
-                    "typeIdentifier": "t_struct$_ClaimData_$3771_storage_ptr",
-                    "typeString": "struct ClaimLib.ClaimData"
+                    "typeIdentifier": "t_struct$_ClaimData_$4476_storage_ptr",
+                    "typeString": "struct ClaimLib.ClaimData storage pointer"
                   },
                   "typeName": {
                     "contractScope": null,
-                    "id": 3802,
+                    "id": 4507,
                     "name": "ClaimData",
                     "nodeType": "UserDefinedTypeName",
-                    "referencedDeclaration": 3771,
-                    "src": "1109:9:19",
+                    "referencedDeclaration": 4476,
+                    "src": "1109:9:29",
                     "typeDescriptions": {
-                      "typeIdentifier": "t_struct$_ClaimData_$3771_storage_ptr",
-                      "typeString": "struct ClaimLib.ClaimData"
+                      "typeIdentifier": "t_struct$_ClaimData_$4476_storage_ptr",
+                      "typeString": "struct ClaimLib.ClaimData storage pointer"
                     }
                   },
                   "value": null,
                   "visibility": "internal"
                 }
               ],
-              "src": "1108:24:19"
+              "src": "1108:24:29"
             },
             "payable": false,
             "returnParameters": {
-              "id": 3807,
+              "id": 4512,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 3806,
+                  "id": 4511,
                   "name": "",
                   "nodeType": "VariableDeclaration",
-                  "scope": 3814,
-                  "src": "1165:4:19",
+                  "scope": 4519,
+                  "src": "1165:4:29",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -671,10 +671,10 @@
                     "typeString": "bool"
                   },
                   "typeName": {
-                    "id": 3805,
+                    "id": 4510,
                     "name": "bool",
                     "nodeType": "ElementaryTypeName",
-                    "src": "1165:4:19",
+                    "src": "1165:4:29",
                     "typeDescriptions": {
                       "typeIdentifier": "t_bool",
                       "typeString": "bool"
@@ -684,19 +684,19 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "1164:6:19"
+              "src": "1164:6:29"
             },
-            "scope": 3851,
-            "src": "1090:130:19",
+            "scope": 4556,
+            "src": "1090:130:29",
             "stateMutability": "view",
             "superFunction": null,
             "visibility": "internal"
           },
           {
             "body": {
-              "id": 3849,
+              "id": 4554,
               "nodeType": "Block",
-              "src": "1484:347:19",
+              "src": "1484:347:29",
               "statements": [
                 {
                   "condition": {
@@ -705,7 +705,7 @@
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
                     },
-                    "id": 3824,
+                    "id": 4529,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
@@ -714,26 +714,26 @@
                       "argumentTypes": null,
                       "expression": {
                         "argumentTypes": null,
-                        "id": 3821,
+                        "id": 4526,
                         "name": "self",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 3816,
-                        "src": "1551:4:19",
+                        "referencedDeclaration": 4521,
+                        "src": "1551:4:29",
                         "typeDescriptions": {
-                          "typeIdentifier": "t_struct$_ClaimData_$3771_storage_ptr",
+                          "typeIdentifier": "t_struct$_ClaimData_$4476_storage_ptr",
                           "typeString": "struct ClaimLib.ClaimData storage pointer"
                         }
                       },
-                      "id": 3822,
+                      "id": 4527,
                       "isConstant": false,
                       "isLValue": true,
                       "isPure": false,
                       "lValueRequested": false,
                       "memberName": "claimDeposit",
                       "nodeType": "MemberAccess",
-                      "referencedDeclaration": 3766,
-                      "src": "1551:17:19",
+                      "referencedDeclaration": 4471,
+                      "src": "1551:17:29",
                       "typeDescriptions": {
                         "typeIdentifier": "t_uint256",
                         "typeString": "uint256"
@@ -744,14 +744,14 @@
                     "rightExpression": {
                       "argumentTypes": null,
                       "hexValue": "30",
-                      "id": 3823,
+                      "id": 4528,
                       "isConstant": false,
                       "isLValue": false,
                       "isPure": true,
                       "kind": "number",
                       "lValueRequested": false,
                       "nodeType": "Literal",
-                      "src": "1571:1:19",
+                      "src": "1571:1:29",
                       "subdenomination": null,
                       "typeDescriptions": {
                         "typeIdentifier": "t_rational_0_by_1",
@@ -759,31 +759,31 @@
                       },
                       "value": "0"
                     },
-                    "src": "1551:21:19",
+                    "src": "1551:21:29",
                     "typeDescriptions": {
                       "typeIdentifier": "t_bool",
                       "typeString": "bool"
                     }
                   },
                   "falseBody": null,
-                  "id": 3846,
+                  "id": 4551,
                   "nodeType": "IfStatement",
-                  "src": "1547:257:19",
+                  "src": "1547:257:29",
                   "trueBody": {
-                    "id": 3845,
+                    "id": 4550,
                     "nodeType": "Block",
-                    "src": "1574:230:19",
+                    "src": "1574:230:29",
                     "statements": [
                       {
                         "assignments": [],
                         "declarations": [
                           {
                             "constant": false,
-                            "id": 3826,
+                            "id": 4531,
                             "name": "depositAmount",
                             "nodeType": "VariableDeclaration",
-                            "scope": 3850,
-                            "src": "1588:18:19",
+                            "scope": 4555,
+                            "src": "1588:18:29",
                             "stateVariable": false,
                             "storageLocation": "default",
                             "typeDescriptions": {
@@ -791,10 +791,10 @@
                               "typeString": "uint256"
                             },
                             "typeName": {
-                              "id": 3825,
+                              "id": 4530,
                               "name": "uint",
                               "nodeType": "ElementaryTypeName",
-                              "src": "1588:4:19",
+                              "src": "1588:4:29",
                               "typeDescriptions": {
                                 "typeIdentifier": "t_uint256",
                                 "typeString": "uint256"
@@ -804,27 +804,27 @@
                             "visibility": "internal"
                           }
                         ],
-                        "id": 3827,
+                        "id": 4532,
                         "initialValue": null,
                         "nodeType": "VariableDeclarationStatement",
-                        "src": "1588:18:19"
+                        "src": "1588:18:29"
                       },
                       {
                         "expression": {
                           "argumentTypes": null,
-                          "id": 3831,
+                          "id": 4536,
                           "isConstant": false,
                           "isLValue": false,
                           "isPure": false,
                           "lValueRequested": false,
                           "leftHandSide": {
                             "argumentTypes": null,
-                            "id": 3828,
+                            "id": 4533,
                             "name": "depositAmount",
                             "nodeType": "Identifier",
                             "overloadedDeclarations": [],
-                            "referencedDeclaration": 3826,
-                            "src": "1620:13:19",
+                            "referencedDeclaration": 4531,
+                            "src": "1620:13:29",
                             "typeDescriptions": {
                               "typeIdentifier": "t_uint256",
                               "typeString": "uint256"
@@ -836,45 +836,45 @@
                             "argumentTypes": null,
                             "expression": {
                               "argumentTypes": null,
-                              "id": 3829,
+                              "id": 4534,
                               "name": "self",
                               "nodeType": "Identifier",
                               "overloadedDeclarations": [],
-                              "referencedDeclaration": 3816,
-                              "src": "1636:4:19",
+                              "referencedDeclaration": 4521,
+                              "src": "1636:4:29",
                               "typeDescriptions": {
-                                "typeIdentifier": "t_struct$_ClaimData_$3771_storage_ptr",
+                                "typeIdentifier": "t_struct$_ClaimData_$4476_storage_ptr",
                                 "typeString": "struct ClaimLib.ClaimData storage pointer"
                               }
                             },
-                            "id": 3830,
+                            "id": 4535,
                             "isConstant": false,
                             "isLValue": true,
                             "isPure": false,
                             "lValueRequested": false,
                             "memberName": "claimDeposit",
                             "nodeType": "MemberAccess",
-                            "referencedDeclaration": 3766,
-                            "src": "1636:17:19",
+                            "referencedDeclaration": 4471,
+                            "src": "1636:17:29",
                             "typeDescriptions": {
                               "typeIdentifier": "t_uint256",
                               "typeString": "uint256"
                             }
                           },
-                          "src": "1620:33:19",
+                          "src": "1620:33:29",
                           "typeDescriptions": {
                             "typeIdentifier": "t_uint256",
                             "typeString": "uint256"
                           }
                         },
-                        "id": 3832,
+                        "id": 4537,
                         "nodeType": "ExpressionStatement",
-                        "src": "1620:33:19"
+                        "src": "1620:33:29"
                       },
                       {
                         "expression": {
                           "argumentTypes": null,
-                          "id": 3837,
+                          "id": 4542,
                           "isConstant": false,
                           "isLValue": false,
                           "isPure": false,
@@ -883,26 +883,26 @@
                             "argumentTypes": null,
                             "expression": {
                               "argumentTypes": null,
-                              "id": 3833,
+                              "id": 4538,
                               "name": "self",
                               "nodeType": "Identifier",
                               "overloadedDeclarations": [],
-                              "referencedDeclaration": 3816,
-                              "src": "1667:4:19",
+                              "referencedDeclaration": 4521,
+                              "src": "1667:4:29",
                               "typeDescriptions": {
-                                "typeIdentifier": "t_struct$_ClaimData_$3771_storage_ptr",
+                                "typeIdentifier": "t_struct$_ClaimData_$4476_storage_ptr",
                                 "typeString": "struct ClaimLib.ClaimData storage pointer"
                               }
                             },
-                            "id": 3835,
+                            "id": 4540,
                             "isConstant": false,
                             "isLValue": true,
                             "isPure": false,
                             "lValueRequested": true,
                             "memberName": "claimDeposit",
                             "nodeType": "MemberAccess",
-                            "referencedDeclaration": 3766,
-                            "src": "1667:17:19",
+                            "referencedDeclaration": 4471,
+                            "src": "1667:17:29",
                             "typeDescriptions": {
                               "typeIdentifier": "t_uint256",
                               "typeString": "uint256"
@@ -913,14 +913,14 @@
                           "rightHandSide": {
                             "argumentTypes": null,
                             "hexValue": "30",
-                            "id": 3836,
+                            "id": 4541,
                             "isConstant": false,
                             "isLValue": false,
                             "isPure": true,
                             "kind": "number",
                             "lValueRequested": false,
                             "nodeType": "Literal",
-                            "src": "1687:1:19",
+                            "src": "1687:1:29",
                             "subdenomination": null,
                             "typeDescriptions": {
                               "typeIdentifier": "t_rational_0_by_1",
@@ -928,15 +928,15 @@
                             },
                             "value": "0"
                           },
-                          "src": "1667:21:19",
+                          "src": "1667:21:29",
                           "typeDescriptions": {
                             "typeIdentifier": "t_uint256",
                             "typeString": "uint256"
                           }
                         },
-                        "id": 3838,
+                        "id": 4543,
                         "nodeType": "ExpressionStatement",
-                        "src": "1667:21:19"
+                        "src": "1667:21:29"
                       },
                       {
                         "expression": {
@@ -944,12 +944,12 @@
                           "arguments": [
                             {
                               "argumentTypes": null,
-                              "id": 3842,
+                              "id": 4547,
                               "name": "depositAmount",
                               "nodeType": "Identifier",
                               "overloadedDeclarations": [],
-                              "referencedDeclaration": 3826,
-                              "src": "1779:13:19",
+                              "referencedDeclaration": 4531,
+                              "src": "1779:13:29",
                               "typeDescriptions": {
                                 "typeIdentifier": "t_uint256",
                                 "typeString": "uint256"
@@ -967,32 +967,32 @@
                               "argumentTypes": null,
                               "expression": {
                                 "argumentTypes": null,
-                                "id": 3839,
+                                "id": 4544,
                                 "name": "self",
                                 "nodeType": "Identifier",
                                 "overloadedDeclarations": [],
-                                "referencedDeclaration": 3816,
-                                "src": "1759:4:19",
+                                "referencedDeclaration": 4521,
+                                "src": "1759:4:29",
                                 "typeDescriptions": {
-                                  "typeIdentifier": "t_struct$_ClaimData_$3771_storage_ptr",
+                                  "typeIdentifier": "t_struct$_ClaimData_$4476_storage_ptr",
                                   "typeString": "struct ClaimLib.ClaimData storage pointer"
                                 }
                               },
-                              "id": 3840,
+                              "id": 4545,
                               "isConstant": false,
                               "isLValue": true,
                               "isPure": false,
                               "lValueRequested": false,
                               "memberName": "claimedBy",
                               "nodeType": "MemberAccess",
-                              "referencedDeclaration": 3764,
-                              "src": "1759:14:19",
+                              "referencedDeclaration": 4469,
+                              "src": "1759:14:29",
                               "typeDescriptions": {
                                 "typeIdentifier": "t_address",
                                 "typeString": "address"
                               }
                             },
-                            "id": 3841,
+                            "id": 4546,
                             "isConstant": false,
                             "isLValue": false,
                             "isPure": false,
@@ -1000,13 +1000,13 @@
                             "memberName": "send",
                             "nodeType": "MemberAccess",
                             "referencedDeclaration": null,
-                            "src": "1759:19:19",
+                            "src": "1759:19:29",
                             "typeDescriptions": {
                               "typeIdentifier": "t_function_send_nonpayable$_t_uint256_$returns$_t_bool_$",
                               "typeString": "function (uint256) returns (bool)"
                             }
                           },
-                          "id": 3843,
+                          "id": 4548,
                           "isConstant": false,
                           "isLValue": false,
                           "isPure": false,
@@ -1014,16 +1014,16 @@
                           "lValueRequested": false,
                           "names": [],
                           "nodeType": "FunctionCall",
-                          "src": "1759:34:19",
+                          "src": "1759:34:29",
                           "typeDescriptions": {
                             "typeIdentifier": "t_bool",
                             "typeString": "bool"
                           }
                         },
-                        "functionReturnParameters": 3820,
-                        "id": 3844,
+                        "functionReturnParameters": 4525,
+                        "id": 4549,
                         "nodeType": "Return",
-                        "src": "1752:41:19"
+                        "src": "1752:41:29"
                       }
                     ]
                   }
@@ -1032,14 +1032,14 @@
                   "expression": {
                     "argumentTypes": null,
                     "hexValue": "74727565",
-                    "id": 3847,
+                    "id": 4552,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": true,
                     "kind": "bool",
                     "lValueRequested": false,
                     "nodeType": "Literal",
-                    "src": "1820:4:19",
+                    "src": "1820:4:29",
                     "subdenomination": null,
                     "typeDescriptions": {
                       "typeIdentifier": "t_bool",
@@ -1047,15 +1047,15 @@
                     },
                     "value": "true"
                   },
-                  "functionReturnParameters": 3820,
-                  "id": 3848,
+                  "functionReturnParameters": 4525,
+                  "id": 4553,
                   "nodeType": "Return",
-                  "src": "1813:11:19"
+                  "src": "1813:11:29"
                 }
               ]
             },
             "documentation": null,
-            "id": 3850,
+            "id": 4555,
             "implemented": true,
             "isConstructor": false,
             "isDeclaredConst": false,
@@ -1063,52 +1063,52 @@
             "name": "refundDeposit",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 3817,
+              "id": 4522,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 3816,
+                  "id": 4521,
                   "name": "self",
                   "nodeType": "VariableDeclaration",
-                  "scope": 3850,
-                  "src": "1423:22:19",
+                  "scope": 4555,
+                  "src": "1423:22:29",
                   "stateVariable": false,
                   "storageLocation": "storage",
                   "typeDescriptions": {
-                    "typeIdentifier": "t_struct$_ClaimData_$3771_storage_ptr",
-                    "typeString": "struct ClaimLib.ClaimData"
+                    "typeIdentifier": "t_struct$_ClaimData_$4476_storage_ptr",
+                    "typeString": "struct ClaimLib.ClaimData storage pointer"
                   },
                   "typeName": {
                     "contractScope": null,
-                    "id": 3815,
+                    "id": 4520,
                     "name": "ClaimData",
                     "nodeType": "UserDefinedTypeName",
-                    "referencedDeclaration": 3771,
-                    "src": "1423:9:19",
+                    "referencedDeclaration": 4476,
+                    "src": "1423:9:29",
                     "typeDescriptions": {
-                      "typeIdentifier": "t_struct$_ClaimData_$3771_storage_ptr",
-                      "typeString": "struct ClaimLib.ClaimData"
+                      "typeIdentifier": "t_struct$_ClaimData_$4476_storage_ptr",
+                      "typeString": "struct ClaimLib.ClaimData storage pointer"
                     }
                   },
                   "value": null,
                   "visibility": "internal"
                 }
               ],
-              "src": "1422:24:19"
+              "src": "1422:24:29"
             },
             "payable": false,
             "returnParameters": {
-              "id": 3820,
+              "id": 4525,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 3819,
+                  "id": 4524,
                   "name": "",
                   "nodeType": "VariableDeclaration",
-                  "scope": 3850,
-                  "src": "1474:4:19",
+                  "scope": 4555,
+                  "src": "1474:4:29",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -1116,10 +1116,10 @@
                     "typeString": "bool"
                   },
                   "typeName": {
-                    "id": 3818,
+                    "id": 4523,
                     "name": "bool",
                     "nodeType": "ElementaryTypeName",
-                    "src": "1474:4:19",
+                    "src": "1474:4:29",
                     "typeDescriptions": {
                       "typeIdentifier": "t_bool",
                       "typeString": "bool"
@@ -1129,33 +1129,33 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "1473:6:19"
+              "src": "1473:6:29"
             },
-            "scope": 3851,
-            "src": "1400:431:19",
+            "scope": 4556,
+            "src": "1400:431:29",
             "stateMutability": "nonpayable",
             "superFunction": null,
             "visibility": "internal"
           }
         ],
-        "scope": 3852,
-        "src": "69:1764:19"
+        "scope": 4557,
+        "src": "69:1764:29"
       }
     ],
-    "src": "0:1833:19"
+    "src": "0:1833:29"
   },
   "legacyAST": {
     "absolutePath": "contracts/Library/ClaimLib.sol",
     "exportedSymbols": {
       "ClaimLib": [
-        3851
+        4556
       ]
     },
-    "id": 3852,
+    "id": 4557,
     "nodeType": "SourceUnit",
     "nodes": [
       {
-        "id": 3758,
+        "id": 4463,
         "literals": [
           "solidity",
           "^",
@@ -1163,16 +1163,16 @@
           ".21"
         ],
         "nodeType": "PragmaDirective",
-        "src": "0:24:19"
+        "src": "0:24:29"
       },
       {
         "absolutePath": "contracts/zeppelin/SafeMath.sol",
         "file": "contracts/zeppelin/SafeMath.sol",
-        "id": 3759,
+        "id": 4464,
         "nodeType": "ImportDirective",
-        "scope": 3852,
-        "sourceUnit": 6390,
-        "src": "26:41:19",
+        "scope": 4557,
+        "sourceUnit": 7318,
+        "src": "26:41:29",
         "symbolAliases": [],
         "unitAlias": ""
       },
@@ -1182,34 +1182,34 @@
         "contractKind": "library",
         "documentation": null,
         "fullyImplemented": true,
-        "id": 3851,
+        "id": 4556,
         "linearizedBaseContracts": [
-          3851
+          4556
         ],
         "name": "ClaimLib",
         "nodeType": "ContractDefinition",
         "nodes": [
           {
-            "id": 3762,
+            "id": 4467,
             "libraryName": {
               "contractScope": null,
-              "id": 3760,
+              "id": 4465,
               "name": "SafeMath",
               "nodeType": "UserDefinedTypeName",
-              "referencedDeclaration": 6389,
-              "src": "98:8:19",
+              "referencedDeclaration": 7317,
+              "src": "98:8:29",
               "typeDescriptions": {
-                "typeIdentifier": "t_contract$_SafeMath_$6389",
+                "typeIdentifier": "t_contract$_SafeMath_$7317",
                 "typeString": "library SafeMath"
               }
             },
             "nodeType": "UsingForDirective",
-            "src": "92:24:19",
+            "src": "92:24:29",
             "typeName": {
-              "id": 3761,
+              "id": 4466,
               "name": "uint",
               "nodeType": "ElementaryTypeName",
-              "src": "111:4:19",
+              "src": "111:4:29",
               "typeDescriptions": {
                 "typeIdentifier": "t_uint256",
                 "typeString": "uint256"
@@ -1218,15 +1218,15 @@
           },
           {
             "canonicalName": "ClaimLib.ClaimData",
-            "id": 3771,
+            "id": 4476,
             "members": [
               {
                 "constant": false,
-                "id": 3764,
+                "id": 4469,
                 "name": "claimedBy",
                 "nodeType": "VariableDeclaration",
-                "scope": 3771,
-                "src": "149:17:19",
+                "scope": 4476,
+                "src": "149:17:29",
                 "stateVariable": false,
                 "storageLocation": "default",
                 "typeDescriptions": {
@@ -1234,10 +1234,10 @@
                   "typeString": "address"
                 },
                 "typeName": {
-                  "id": 3763,
+                  "id": 4468,
                   "name": "address",
                   "nodeType": "ElementaryTypeName",
-                  "src": "149:7:19",
+                  "src": "149:7:29",
                   "typeDescriptions": {
                     "typeIdentifier": "t_address",
                     "typeString": "address"
@@ -1248,11 +1248,11 @@
               },
               {
                 "constant": false,
-                "id": 3766,
+                "id": 4471,
                 "name": "claimDeposit",
                 "nodeType": "VariableDeclaration",
-                "scope": 3771,
-                "src": "232:17:19",
+                "scope": 4476,
+                "src": "232:17:29",
                 "stateVariable": false,
                 "storageLocation": "default",
                 "typeDescriptions": {
@@ -1260,10 +1260,10 @@
                   "typeString": "uint256"
                 },
                 "typeName": {
-                  "id": 3765,
+                  "id": 4470,
                   "name": "uint",
                   "nodeType": "ElementaryTypeName",
-                  "src": "232:4:19",
+                  "src": "232:4:29",
                   "typeDescriptions": {
                     "typeIdentifier": "t_uint256",
                     "typeString": "uint256"
@@ -1274,11 +1274,11 @@
               },
               {
                 "constant": false,
-                "id": 3768,
+                "id": 4473,
                 "name": "requiredDeposit",
                 "nodeType": "VariableDeclaration",
-                "scope": 3771,
-                "src": "324:20:19",
+                "scope": 4476,
+                "src": "324:20:29",
                 "stateVariable": false,
                 "storageLocation": "default",
                 "typeDescriptions": {
@@ -1286,10 +1286,10 @@
                   "typeString": "uint256"
                 },
                 "typeName": {
-                  "id": 3767,
+                  "id": 4472,
                   "name": "uint",
                   "nodeType": "ElementaryTypeName",
-                  "src": "324:4:19",
+                  "src": "324:4:29",
                   "typeDescriptions": {
                     "typeIdentifier": "t_uint256",
                     "typeString": "uint256"
@@ -1300,11 +1300,11 @@
               },
               {
                 "constant": false,
-                "id": 3770,
+                "id": 4475,
                 "name": "paymentModifier",
                 "nodeType": "VariableDeclaration",
-                "scope": 3771,
-                "src": "408:21:19",
+                "scope": 4476,
+                "src": "408:21:29",
                 "stateVariable": false,
                 "storageLocation": "default",
                 "typeDescriptions": {
@@ -1312,10 +1312,10 @@
                   "typeString": "uint8"
                 },
                 "typeName": {
-                  "id": 3769,
+                  "id": 4474,
                   "name": "uint8",
                   "nodeType": "ElementaryTypeName",
-                  "src": "408:5:19",
+                  "src": "408:5:29",
                   "typeDescriptions": {
                     "typeIdentifier": "t_uint8",
                     "typeString": "uint8"
@@ -1327,20 +1327,20 @@
             ],
             "name": "ClaimData",
             "nodeType": "StructDefinition",
-            "scope": 3851,
-            "src": "122:459:19",
+            "scope": 4556,
+            "src": "122:459:29",
             "visibility": "public"
           },
           {
             "body": {
-              "id": 3800,
+              "id": 4505,
               "nodeType": "Block",
-              "src": "881:132:19",
+              "src": "881:132:29",
               "statements": [
                 {
                   "expression": {
                     "argumentTypes": null,
-                    "id": 3785,
+                    "id": 4490,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
@@ -1349,26 +1349,26 @@
                       "argumentTypes": null,
                       "expression": {
                         "argumentTypes": null,
-                        "id": 3780,
+                        "id": 4485,
                         "name": "self",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 3773,
-                        "src": "891:4:19",
+                        "referencedDeclaration": 4478,
+                        "src": "891:4:29",
                         "typeDescriptions": {
-                          "typeIdentifier": "t_struct$_ClaimData_$3771_storage_ptr",
+                          "typeIdentifier": "t_struct$_ClaimData_$4476_storage_ptr",
                           "typeString": "struct ClaimLib.ClaimData storage pointer"
                         }
                       },
-                      "id": 3782,
+                      "id": 4487,
                       "isConstant": false,
                       "isLValue": true,
                       "isPure": false,
                       "lValueRequested": true,
                       "memberName": "claimedBy",
                       "nodeType": "MemberAccess",
-                      "referencedDeclaration": 3764,
-                      "src": "891:14:19",
+                      "referencedDeclaration": 4469,
+                      "src": "891:14:29",
                       "typeDescriptions": {
                         "typeIdentifier": "t_address",
                         "typeString": "address"
@@ -1380,18 +1380,18 @@
                       "argumentTypes": null,
                       "expression": {
                         "argumentTypes": null,
-                        "id": 3783,
+                        "id": 4488,
                         "name": "msg",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 6404,
-                        "src": "908:3:19",
+                        "referencedDeclaration": 7330,
+                        "src": "908:3:29",
                         "typeDescriptions": {
                           "typeIdentifier": "t_magic_message",
                           "typeString": "msg"
                         }
                       },
-                      "id": 3784,
+                      "id": 4489,
                       "isConstant": false,
                       "isLValue": false,
                       "isPure": false,
@@ -1399,26 +1399,26 @@
                       "memberName": "sender",
                       "nodeType": "MemberAccess",
                       "referencedDeclaration": null,
-                      "src": "908:10:19",
+                      "src": "908:10:29",
                       "typeDescriptions": {
                         "typeIdentifier": "t_address",
                         "typeString": "address"
                       }
                     },
-                    "src": "891:27:19",
+                    "src": "891:27:29",
                     "typeDescriptions": {
                       "typeIdentifier": "t_address",
                       "typeString": "address"
                     }
                   },
-                  "id": 3786,
+                  "id": 4491,
                   "nodeType": "ExpressionStatement",
-                  "src": "891:27:19"
+                  "src": "891:27:29"
                 },
                 {
                   "expression": {
                     "argumentTypes": null,
-                    "id": 3792,
+                    "id": 4497,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
@@ -1427,26 +1427,26 @@
                       "argumentTypes": null,
                       "expression": {
                         "argumentTypes": null,
-                        "id": 3787,
+                        "id": 4492,
                         "name": "self",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 3773,
-                        "src": "928:4:19",
+                        "referencedDeclaration": 4478,
+                        "src": "928:4:29",
                         "typeDescriptions": {
-                          "typeIdentifier": "t_struct$_ClaimData_$3771_storage_ptr",
+                          "typeIdentifier": "t_struct$_ClaimData_$4476_storage_ptr",
                           "typeString": "struct ClaimLib.ClaimData storage pointer"
                         }
                       },
-                      "id": 3789,
+                      "id": 4494,
                       "isConstant": false,
                       "isLValue": true,
                       "isPure": false,
                       "lValueRequested": true,
                       "memberName": "claimDeposit",
                       "nodeType": "MemberAccess",
-                      "referencedDeclaration": 3766,
-                      "src": "928:17:19",
+                      "referencedDeclaration": 4471,
+                      "src": "928:17:29",
                       "typeDescriptions": {
                         "typeIdentifier": "t_uint256",
                         "typeString": "uint256"
@@ -1458,18 +1458,18 @@
                       "argumentTypes": null,
                       "expression": {
                         "argumentTypes": null,
-                        "id": 3790,
+                        "id": 4495,
                         "name": "msg",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 6404,
-                        "src": "948:3:19",
+                        "referencedDeclaration": 7330,
+                        "src": "948:3:29",
                         "typeDescriptions": {
                           "typeIdentifier": "t_magic_message",
                           "typeString": "msg"
                         }
                       },
-                      "id": 3791,
+                      "id": 4496,
                       "isConstant": false,
                       "isLValue": false,
                       "isPure": false,
@@ -1477,26 +1477,26 @@
                       "memberName": "value",
                       "nodeType": "MemberAccess",
                       "referencedDeclaration": null,
-                      "src": "948:9:19",
+                      "src": "948:9:29",
                       "typeDescriptions": {
                         "typeIdentifier": "t_uint256",
                         "typeString": "uint256"
                       }
                     },
-                    "src": "928:29:19",
+                    "src": "928:29:29",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
                     }
                   },
-                  "id": 3793,
+                  "id": 4498,
                   "nodeType": "ExpressionStatement",
-                  "src": "928:29:19"
+                  "src": "928:29:29"
                 },
                 {
                   "expression": {
                     "argumentTypes": null,
-                    "id": 3798,
+                    "id": 4503,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
@@ -1505,26 +1505,26 @@
                       "argumentTypes": null,
                       "expression": {
                         "argumentTypes": null,
-                        "id": 3794,
+                        "id": 4499,
                         "name": "self",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 3773,
-                        "src": "967:4:19",
+                        "referencedDeclaration": 4478,
+                        "src": "967:4:29",
                         "typeDescriptions": {
-                          "typeIdentifier": "t_struct$_ClaimData_$3771_storage_ptr",
+                          "typeIdentifier": "t_struct$_ClaimData_$4476_storage_ptr",
                           "typeString": "struct ClaimLib.ClaimData storage pointer"
                         }
                       },
-                      "id": 3796,
+                      "id": 4501,
                       "isConstant": false,
                       "isLValue": true,
                       "isPure": false,
                       "lValueRequested": true,
                       "memberName": "paymentModifier",
                       "nodeType": "MemberAccess",
-                      "referencedDeclaration": 3770,
-                      "src": "967:20:19",
+                      "referencedDeclaration": 4475,
+                      "src": "967:20:29",
                       "typeDescriptions": {
                         "typeIdentifier": "t_uint8",
                         "typeString": "uint8"
@@ -1534,31 +1534,31 @@
                     "operator": "=",
                     "rightHandSide": {
                       "argumentTypes": null,
-                      "id": 3797,
+                      "id": 4502,
                       "name": "_paymentModifier",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [],
-                      "referencedDeclaration": 3775,
-                      "src": "990:16:19",
+                      "referencedDeclaration": 4480,
+                      "src": "990:16:29",
                       "typeDescriptions": {
                         "typeIdentifier": "t_uint8",
                         "typeString": "uint8"
                       }
                     },
-                    "src": "967:39:19",
+                    "src": "967:39:29",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint8",
                       "typeString": "uint8"
                     }
                   },
-                  "id": 3799,
+                  "id": 4504,
                   "nodeType": "ExpressionStatement",
-                  "src": "967:39:19"
+                  "src": "967:39:29"
                 }
               ]
             },
             "documentation": null,
-            "id": 3801,
+            "id": 4506,
             "implemented": true,
             "isConstructor": false,
             "isDeclaredConst": false,
@@ -1566,32 +1566,32 @@
             "name": "claim",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 3776,
+              "id": 4481,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 3773,
+                  "id": 4478,
                   "name": "self",
                   "nodeType": "VariableDeclaration",
-                  "scope": 3801,
-                  "src": "782:22:19",
+                  "scope": 4506,
+                  "src": "782:22:29",
                   "stateVariable": false,
                   "storageLocation": "storage",
                   "typeDescriptions": {
-                    "typeIdentifier": "t_struct$_ClaimData_$3771_storage_ptr",
-                    "typeString": "struct ClaimLib.ClaimData"
+                    "typeIdentifier": "t_struct$_ClaimData_$4476_storage_ptr",
+                    "typeString": "struct ClaimLib.ClaimData storage pointer"
                   },
                   "typeName": {
                     "contractScope": null,
-                    "id": 3772,
+                    "id": 4477,
                     "name": "ClaimData",
                     "nodeType": "UserDefinedTypeName",
-                    "referencedDeclaration": 3771,
-                    "src": "782:9:19",
+                    "referencedDeclaration": 4476,
+                    "src": "782:9:29",
                     "typeDescriptions": {
-                      "typeIdentifier": "t_struct$_ClaimData_$3771_storage_ptr",
-                      "typeString": "struct ClaimLib.ClaimData"
+                      "typeIdentifier": "t_struct$_ClaimData_$4476_storage_ptr",
+                      "typeString": "struct ClaimLib.ClaimData storage pointer"
                     }
                   },
                   "value": null,
@@ -1599,11 +1599,11 @@
                 },
                 {
                   "constant": false,
-                  "id": 3775,
+                  "id": 4480,
                   "name": "_paymentModifier",
                   "nodeType": "VariableDeclaration",
-                  "scope": 3801,
-                  "src": "815:22:19",
+                  "scope": 4506,
+                  "src": "815:22:29",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -1611,10 +1611,10 @@
                     "typeString": "uint8"
                   },
                   "typeName": {
-                    "id": 3774,
+                    "id": 4479,
                     "name": "uint8",
                     "nodeType": "ElementaryTypeName",
-                    "src": "815:5:19",
+                    "src": "815:5:29",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint8",
                       "typeString": "uint8"
@@ -1624,20 +1624,20 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "772:71:19"
+              "src": "772:71:29"
             },
             "payable": false,
             "returnParameters": {
-              "id": 3779,
+              "id": 4484,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 3778,
+                  "id": 4483,
                   "name": "",
                   "nodeType": "VariableDeclaration",
-                  "scope": 3801,
-                  "src": "871:4:19",
+                  "scope": 4506,
+                  "src": "871:4:29",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -1645,10 +1645,10 @@
                     "typeString": "bool"
                   },
                   "typeName": {
-                    "id": 3777,
+                    "id": 4482,
                     "name": "bool",
                     "nodeType": "ElementaryTypeName",
-                    "src": "871:4:19",
+                    "src": "871:4:29",
                     "typeDescriptions": {
                       "typeIdentifier": "t_bool",
                       "typeString": "bool"
@@ -1658,19 +1658,19 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "870:6:19"
+              "src": "870:6:29"
             },
-            "scope": 3851,
-            "src": "758:255:19",
+            "scope": 4556,
+            "src": "758:255:29",
             "stateMutability": "nonpayable",
             "superFunction": null,
             "visibility": "internal"
           },
           {
             "body": {
-              "id": 3813,
+              "id": 4518,
               "nodeType": "Block",
-              "src": "1175:45:19",
+              "src": "1175:45:29",
               "statements": [
                 {
                   "expression": {
@@ -1679,7 +1679,7 @@
                       "typeIdentifier": "t_address",
                       "typeString": "address"
                     },
-                    "id": 3811,
+                    "id": 4516,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
@@ -1688,26 +1688,26 @@
                       "argumentTypes": null,
                       "expression": {
                         "argumentTypes": null,
-                        "id": 3808,
+                        "id": 4513,
                         "name": "self",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 3803,
-                        "src": "1192:4:19",
+                        "referencedDeclaration": 4508,
+                        "src": "1192:4:29",
                         "typeDescriptions": {
-                          "typeIdentifier": "t_struct$_ClaimData_$3771_storage_ptr",
+                          "typeIdentifier": "t_struct$_ClaimData_$4476_storage_ptr",
                           "typeString": "struct ClaimLib.ClaimData storage pointer"
                         }
                       },
-                      "id": 3809,
+                      "id": 4514,
                       "isConstant": false,
                       "isLValue": true,
                       "isPure": false,
                       "lValueRequested": false,
                       "memberName": "claimedBy",
                       "nodeType": "MemberAccess",
-                      "referencedDeclaration": 3764,
-                      "src": "1192:14:19",
+                      "referencedDeclaration": 4469,
+                      "src": "1192:14:29",
                       "typeDescriptions": {
                         "typeIdentifier": "t_address",
                         "typeString": "address"
@@ -1718,14 +1718,14 @@
                     "rightExpression": {
                       "argumentTypes": null,
                       "hexValue": "307830",
-                      "id": 3810,
+                      "id": 4515,
                       "isConstant": false,
                       "isLValue": false,
                       "isPure": true,
                       "kind": "number",
                       "lValueRequested": false,
                       "nodeType": "Literal",
-                      "src": "1210:3:19",
+                      "src": "1210:3:29",
                       "subdenomination": null,
                       "typeDescriptions": {
                         "typeIdentifier": "t_rational_0_by_1",
@@ -1733,21 +1733,21 @@
                       },
                       "value": "0x0"
                     },
-                    "src": "1192:21:19",
+                    "src": "1192:21:29",
                     "typeDescriptions": {
                       "typeIdentifier": "t_bool",
                       "typeString": "bool"
                     }
                   },
-                  "functionReturnParameters": 3807,
-                  "id": 3812,
+                  "functionReturnParameters": 4512,
+                  "id": 4517,
                   "nodeType": "Return",
-                  "src": "1185:28:19"
+                  "src": "1185:28:29"
                 }
               ]
             },
             "documentation": null,
-            "id": 3814,
+            "id": 4519,
             "implemented": true,
             "isConstructor": false,
             "isDeclaredConst": true,
@@ -1755,52 +1755,52 @@
             "name": "isClaimed",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 3804,
+              "id": 4509,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 3803,
+                  "id": 4508,
                   "name": "self",
                   "nodeType": "VariableDeclaration",
-                  "scope": 3814,
-                  "src": "1109:22:19",
+                  "scope": 4519,
+                  "src": "1109:22:29",
                   "stateVariable": false,
                   "storageLocation": "storage",
                   "typeDescriptions": {
-                    "typeIdentifier": "t_struct$_ClaimData_$3771_storage_ptr",
-                    "typeString": "struct ClaimLib.ClaimData"
+                    "typeIdentifier": "t_struct$_ClaimData_$4476_storage_ptr",
+                    "typeString": "struct ClaimLib.ClaimData storage pointer"
                   },
                   "typeName": {
                     "contractScope": null,
-                    "id": 3802,
+                    "id": 4507,
                     "name": "ClaimData",
                     "nodeType": "UserDefinedTypeName",
-                    "referencedDeclaration": 3771,
-                    "src": "1109:9:19",
+                    "referencedDeclaration": 4476,
+                    "src": "1109:9:29",
                     "typeDescriptions": {
-                      "typeIdentifier": "t_struct$_ClaimData_$3771_storage_ptr",
-                      "typeString": "struct ClaimLib.ClaimData"
+                      "typeIdentifier": "t_struct$_ClaimData_$4476_storage_ptr",
+                      "typeString": "struct ClaimLib.ClaimData storage pointer"
                     }
                   },
                   "value": null,
                   "visibility": "internal"
                 }
               ],
-              "src": "1108:24:19"
+              "src": "1108:24:29"
             },
             "payable": false,
             "returnParameters": {
-              "id": 3807,
+              "id": 4512,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 3806,
+                  "id": 4511,
                   "name": "",
                   "nodeType": "VariableDeclaration",
-                  "scope": 3814,
-                  "src": "1165:4:19",
+                  "scope": 4519,
+                  "src": "1165:4:29",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -1808,10 +1808,10 @@
                     "typeString": "bool"
                   },
                   "typeName": {
-                    "id": 3805,
+                    "id": 4510,
                     "name": "bool",
                     "nodeType": "ElementaryTypeName",
-                    "src": "1165:4:19",
+                    "src": "1165:4:29",
                     "typeDescriptions": {
                       "typeIdentifier": "t_bool",
                       "typeString": "bool"
@@ -1821,19 +1821,19 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "1164:6:19"
+              "src": "1164:6:29"
             },
-            "scope": 3851,
-            "src": "1090:130:19",
+            "scope": 4556,
+            "src": "1090:130:29",
             "stateMutability": "view",
             "superFunction": null,
             "visibility": "internal"
           },
           {
             "body": {
-              "id": 3849,
+              "id": 4554,
               "nodeType": "Block",
-              "src": "1484:347:19",
+              "src": "1484:347:29",
               "statements": [
                 {
                   "condition": {
@@ -1842,7 +1842,7 @@
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
                     },
-                    "id": 3824,
+                    "id": 4529,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
@@ -1851,26 +1851,26 @@
                       "argumentTypes": null,
                       "expression": {
                         "argumentTypes": null,
-                        "id": 3821,
+                        "id": 4526,
                         "name": "self",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 3816,
-                        "src": "1551:4:19",
+                        "referencedDeclaration": 4521,
+                        "src": "1551:4:29",
                         "typeDescriptions": {
-                          "typeIdentifier": "t_struct$_ClaimData_$3771_storage_ptr",
+                          "typeIdentifier": "t_struct$_ClaimData_$4476_storage_ptr",
                           "typeString": "struct ClaimLib.ClaimData storage pointer"
                         }
                       },
-                      "id": 3822,
+                      "id": 4527,
                       "isConstant": false,
                       "isLValue": true,
                       "isPure": false,
                       "lValueRequested": false,
                       "memberName": "claimDeposit",
                       "nodeType": "MemberAccess",
-                      "referencedDeclaration": 3766,
-                      "src": "1551:17:19",
+                      "referencedDeclaration": 4471,
+                      "src": "1551:17:29",
                       "typeDescriptions": {
                         "typeIdentifier": "t_uint256",
                         "typeString": "uint256"
@@ -1881,14 +1881,14 @@
                     "rightExpression": {
                       "argumentTypes": null,
                       "hexValue": "30",
-                      "id": 3823,
+                      "id": 4528,
                       "isConstant": false,
                       "isLValue": false,
                       "isPure": true,
                       "kind": "number",
                       "lValueRequested": false,
                       "nodeType": "Literal",
-                      "src": "1571:1:19",
+                      "src": "1571:1:29",
                       "subdenomination": null,
                       "typeDescriptions": {
                         "typeIdentifier": "t_rational_0_by_1",
@@ -1896,31 +1896,31 @@
                       },
                       "value": "0"
                     },
-                    "src": "1551:21:19",
+                    "src": "1551:21:29",
                     "typeDescriptions": {
                       "typeIdentifier": "t_bool",
                       "typeString": "bool"
                     }
                   },
                   "falseBody": null,
-                  "id": 3846,
+                  "id": 4551,
                   "nodeType": "IfStatement",
-                  "src": "1547:257:19",
+                  "src": "1547:257:29",
                   "trueBody": {
-                    "id": 3845,
+                    "id": 4550,
                     "nodeType": "Block",
-                    "src": "1574:230:19",
+                    "src": "1574:230:29",
                     "statements": [
                       {
                         "assignments": [],
                         "declarations": [
                           {
                             "constant": false,
-                            "id": 3826,
+                            "id": 4531,
                             "name": "depositAmount",
                             "nodeType": "VariableDeclaration",
-                            "scope": 3850,
-                            "src": "1588:18:19",
+                            "scope": 4555,
+                            "src": "1588:18:29",
                             "stateVariable": false,
                             "storageLocation": "default",
                             "typeDescriptions": {
@@ -1928,10 +1928,10 @@
                               "typeString": "uint256"
                             },
                             "typeName": {
-                              "id": 3825,
+                              "id": 4530,
                               "name": "uint",
                               "nodeType": "ElementaryTypeName",
-                              "src": "1588:4:19",
+                              "src": "1588:4:29",
                               "typeDescriptions": {
                                 "typeIdentifier": "t_uint256",
                                 "typeString": "uint256"
@@ -1941,27 +1941,27 @@
                             "visibility": "internal"
                           }
                         ],
-                        "id": 3827,
+                        "id": 4532,
                         "initialValue": null,
                         "nodeType": "VariableDeclarationStatement",
-                        "src": "1588:18:19"
+                        "src": "1588:18:29"
                       },
                       {
                         "expression": {
                           "argumentTypes": null,
-                          "id": 3831,
+                          "id": 4536,
                           "isConstant": false,
                           "isLValue": false,
                           "isPure": false,
                           "lValueRequested": false,
                           "leftHandSide": {
                             "argumentTypes": null,
-                            "id": 3828,
+                            "id": 4533,
                             "name": "depositAmount",
                             "nodeType": "Identifier",
                             "overloadedDeclarations": [],
-                            "referencedDeclaration": 3826,
-                            "src": "1620:13:19",
+                            "referencedDeclaration": 4531,
+                            "src": "1620:13:29",
                             "typeDescriptions": {
                               "typeIdentifier": "t_uint256",
                               "typeString": "uint256"
@@ -1973,45 +1973,45 @@
                             "argumentTypes": null,
                             "expression": {
                               "argumentTypes": null,
-                              "id": 3829,
+                              "id": 4534,
                               "name": "self",
                               "nodeType": "Identifier",
                               "overloadedDeclarations": [],
-                              "referencedDeclaration": 3816,
-                              "src": "1636:4:19",
+                              "referencedDeclaration": 4521,
+                              "src": "1636:4:29",
                               "typeDescriptions": {
-                                "typeIdentifier": "t_struct$_ClaimData_$3771_storage_ptr",
+                                "typeIdentifier": "t_struct$_ClaimData_$4476_storage_ptr",
                                 "typeString": "struct ClaimLib.ClaimData storage pointer"
                               }
                             },
-                            "id": 3830,
+                            "id": 4535,
                             "isConstant": false,
                             "isLValue": true,
                             "isPure": false,
                             "lValueRequested": false,
                             "memberName": "claimDeposit",
                             "nodeType": "MemberAccess",
-                            "referencedDeclaration": 3766,
-                            "src": "1636:17:19",
+                            "referencedDeclaration": 4471,
+                            "src": "1636:17:29",
                             "typeDescriptions": {
                               "typeIdentifier": "t_uint256",
                               "typeString": "uint256"
                             }
                           },
-                          "src": "1620:33:19",
+                          "src": "1620:33:29",
                           "typeDescriptions": {
                             "typeIdentifier": "t_uint256",
                             "typeString": "uint256"
                           }
                         },
-                        "id": 3832,
+                        "id": 4537,
                         "nodeType": "ExpressionStatement",
-                        "src": "1620:33:19"
+                        "src": "1620:33:29"
                       },
                       {
                         "expression": {
                           "argumentTypes": null,
-                          "id": 3837,
+                          "id": 4542,
                           "isConstant": false,
                           "isLValue": false,
                           "isPure": false,
@@ -2020,26 +2020,26 @@
                             "argumentTypes": null,
                             "expression": {
                               "argumentTypes": null,
-                              "id": 3833,
+                              "id": 4538,
                               "name": "self",
                               "nodeType": "Identifier",
                               "overloadedDeclarations": [],
-                              "referencedDeclaration": 3816,
-                              "src": "1667:4:19",
+                              "referencedDeclaration": 4521,
+                              "src": "1667:4:29",
                               "typeDescriptions": {
-                                "typeIdentifier": "t_struct$_ClaimData_$3771_storage_ptr",
+                                "typeIdentifier": "t_struct$_ClaimData_$4476_storage_ptr",
                                 "typeString": "struct ClaimLib.ClaimData storage pointer"
                               }
                             },
-                            "id": 3835,
+                            "id": 4540,
                             "isConstant": false,
                             "isLValue": true,
                             "isPure": false,
                             "lValueRequested": true,
                             "memberName": "claimDeposit",
                             "nodeType": "MemberAccess",
-                            "referencedDeclaration": 3766,
-                            "src": "1667:17:19",
+                            "referencedDeclaration": 4471,
+                            "src": "1667:17:29",
                             "typeDescriptions": {
                               "typeIdentifier": "t_uint256",
                               "typeString": "uint256"
@@ -2050,14 +2050,14 @@
                           "rightHandSide": {
                             "argumentTypes": null,
                             "hexValue": "30",
-                            "id": 3836,
+                            "id": 4541,
                             "isConstant": false,
                             "isLValue": false,
                             "isPure": true,
                             "kind": "number",
                             "lValueRequested": false,
                             "nodeType": "Literal",
-                            "src": "1687:1:19",
+                            "src": "1687:1:29",
                             "subdenomination": null,
                             "typeDescriptions": {
                               "typeIdentifier": "t_rational_0_by_1",
@@ -2065,15 +2065,15 @@
                             },
                             "value": "0"
                           },
-                          "src": "1667:21:19",
+                          "src": "1667:21:29",
                           "typeDescriptions": {
                             "typeIdentifier": "t_uint256",
                             "typeString": "uint256"
                           }
                         },
-                        "id": 3838,
+                        "id": 4543,
                         "nodeType": "ExpressionStatement",
-                        "src": "1667:21:19"
+                        "src": "1667:21:29"
                       },
                       {
                         "expression": {
@@ -2081,12 +2081,12 @@
                           "arguments": [
                             {
                               "argumentTypes": null,
-                              "id": 3842,
+                              "id": 4547,
                               "name": "depositAmount",
                               "nodeType": "Identifier",
                               "overloadedDeclarations": [],
-                              "referencedDeclaration": 3826,
-                              "src": "1779:13:19",
+                              "referencedDeclaration": 4531,
+                              "src": "1779:13:29",
                               "typeDescriptions": {
                                 "typeIdentifier": "t_uint256",
                                 "typeString": "uint256"
@@ -2104,32 +2104,32 @@
                               "argumentTypes": null,
                               "expression": {
                                 "argumentTypes": null,
-                                "id": 3839,
+                                "id": 4544,
                                 "name": "self",
                                 "nodeType": "Identifier",
                                 "overloadedDeclarations": [],
-                                "referencedDeclaration": 3816,
-                                "src": "1759:4:19",
+                                "referencedDeclaration": 4521,
+                                "src": "1759:4:29",
                                 "typeDescriptions": {
-                                  "typeIdentifier": "t_struct$_ClaimData_$3771_storage_ptr",
+                                  "typeIdentifier": "t_struct$_ClaimData_$4476_storage_ptr",
                                   "typeString": "struct ClaimLib.ClaimData storage pointer"
                                 }
                               },
-                              "id": 3840,
+                              "id": 4545,
                               "isConstant": false,
                               "isLValue": true,
                               "isPure": false,
                               "lValueRequested": false,
                               "memberName": "claimedBy",
                               "nodeType": "MemberAccess",
-                              "referencedDeclaration": 3764,
-                              "src": "1759:14:19",
+                              "referencedDeclaration": 4469,
+                              "src": "1759:14:29",
                               "typeDescriptions": {
                                 "typeIdentifier": "t_address",
                                 "typeString": "address"
                               }
                             },
-                            "id": 3841,
+                            "id": 4546,
                             "isConstant": false,
                             "isLValue": false,
                             "isPure": false,
@@ -2137,13 +2137,13 @@
                             "memberName": "send",
                             "nodeType": "MemberAccess",
                             "referencedDeclaration": null,
-                            "src": "1759:19:19",
+                            "src": "1759:19:29",
                             "typeDescriptions": {
                               "typeIdentifier": "t_function_send_nonpayable$_t_uint256_$returns$_t_bool_$",
                               "typeString": "function (uint256) returns (bool)"
                             }
                           },
-                          "id": 3843,
+                          "id": 4548,
                           "isConstant": false,
                           "isLValue": false,
                           "isPure": false,
@@ -2151,16 +2151,16 @@
                           "lValueRequested": false,
                           "names": [],
                           "nodeType": "FunctionCall",
-                          "src": "1759:34:19",
+                          "src": "1759:34:29",
                           "typeDescriptions": {
                             "typeIdentifier": "t_bool",
                             "typeString": "bool"
                           }
                         },
-                        "functionReturnParameters": 3820,
-                        "id": 3844,
+                        "functionReturnParameters": 4525,
+                        "id": 4549,
                         "nodeType": "Return",
-                        "src": "1752:41:19"
+                        "src": "1752:41:29"
                       }
                     ]
                   }
@@ -2169,14 +2169,14 @@
                   "expression": {
                     "argumentTypes": null,
                     "hexValue": "74727565",
-                    "id": 3847,
+                    "id": 4552,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": true,
                     "kind": "bool",
                     "lValueRequested": false,
                     "nodeType": "Literal",
-                    "src": "1820:4:19",
+                    "src": "1820:4:29",
                     "subdenomination": null,
                     "typeDescriptions": {
                       "typeIdentifier": "t_bool",
@@ -2184,15 +2184,15 @@
                     },
                     "value": "true"
                   },
-                  "functionReturnParameters": 3820,
-                  "id": 3848,
+                  "functionReturnParameters": 4525,
+                  "id": 4553,
                   "nodeType": "Return",
-                  "src": "1813:11:19"
+                  "src": "1813:11:29"
                 }
               ]
             },
             "documentation": null,
-            "id": 3850,
+            "id": 4555,
             "implemented": true,
             "isConstructor": false,
             "isDeclaredConst": false,
@@ -2200,52 +2200,52 @@
             "name": "refundDeposit",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 3817,
+              "id": 4522,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 3816,
+                  "id": 4521,
                   "name": "self",
                   "nodeType": "VariableDeclaration",
-                  "scope": 3850,
-                  "src": "1423:22:19",
+                  "scope": 4555,
+                  "src": "1423:22:29",
                   "stateVariable": false,
                   "storageLocation": "storage",
                   "typeDescriptions": {
-                    "typeIdentifier": "t_struct$_ClaimData_$3771_storage_ptr",
-                    "typeString": "struct ClaimLib.ClaimData"
+                    "typeIdentifier": "t_struct$_ClaimData_$4476_storage_ptr",
+                    "typeString": "struct ClaimLib.ClaimData storage pointer"
                   },
                   "typeName": {
                     "contractScope": null,
-                    "id": 3815,
+                    "id": 4520,
                     "name": "ClaimData",
                     "nodeType": "UserDefinedTypeName",
-                    "referencedDeclaration": 3771,
-                    "src": "1423:9:19",
+                    "referencedDeclaration": 4476,
+                    "src": "1423:9:29",
                     "typeDescriptions": {
-                      "typeIdentifier": "t_struct$_ClaimData_$3771_storage_ptr",
-                      "typeString": "struct ClaimLib.ClaimData"
+                      "typeIdentifier": "t_struct$_ClaimData_$4476_storage_ptr",
+                      "typeString": "struct ClaimLib.ClaimData storage pointer"
                     }
                   },
                   "value": null,
                   "visibility": "internal"
                 }
               ],
-              "src": "1422:24:19"
+              "src": "1422:24:29"
             },
             "payable": false,
             "returnParameters": {
-              "id": 3820,
+              "id": 4525,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 3819,
+                  "id": 4524,
                   "name": "",
                   "nodeType": "VariableDeclaration",
-                  "scope": 3850,
-                  "src": "1474:4:19",
+                  "scope": 4555,
+                  "src": "1474:4:29",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -2253,10 +2253,10 @@
                     "typeString": "bool"
                   },
                   "typeName": {
-                    "id": 3818,
+                    "id": 4523,
                     "name": "bool",
                     "nodeType": "ElementaryTypeName",
-                    "src": "1474:4:19",
+                    "src": "1474:4:29",
                     "typeDescriptions": {
                       "typeIdentifier": "t_bool",
                       "typeString": "bool"
@@ -2266,26 +2266,32 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "1473:6:19"
+              "src": "1473:6:29"
             },
-            "scope": 3851,
-            "src": "1400:431:19",
+            "scope": 4556,
+            "src": "1400:431:29",
             "stateMutability": "nonpayable",
             "superFunction": null,
             "visibility": "internal"
           }
         ],
-        "scope": 3852,
-        "src": "69:1764:19"
+        "scope": 4557,
+        "src": "69:1764:29"
       }
     ],
-    "src": "0:1833:19"
+    "src": "0:1833:29"
   },
   "compiler": {
     "name": "solc",
-    "version": "0.4.23+commit.124ca40d.Emscripten.clang"
+    "version": "0.4.21+commit.dfe3193c.Emscripten.clang"
   },
   "networks": {
+    "3": {
+      "events": {},
+      "links": {},
+      "address": "0x58d563e377389f37d867361babc954b58a96b1ef",
+      "transactionHash": "0x53094c5c207983527765e10f5ba5028092e0b33db45982ca8871f37dcac7a46e"
+    },
     "42": {
       "events": {},
       "links": {},
@@ -2294,5 +2300,5 @@
     }
   },
   "schemaVersion": "2.0.0",
-  "updatedAt": "2018-04-24T07:01:29.897Z"
+  "updatedAt": "2018-05-21T17:42:15.826Z"
 }
